@@ -6,18 +6,11 @@ public class ArrayTaskList {
 
     /**
      * Конструктор, що створює список задач
-     * з кількістю 10 (за замовчуванням).
+     * з кількістю 0 (за замовчуванням).
      */
     public ArrayTaskList() {
-        taskList = new Task[10];
+        taskList = new Task[0];
     }
-
-    /**
-     * Конструктор, що створює список задач
-     * з необхідною кількістю.
-     * 
-     * @param size - розмір списку.
-     */
     public ArrayTaskList(int size) {
         taskList = new Task[size];
     }
@@ -26,7 +19,7 @@ public class ArrayTaskList {
         if (task != null) {
             if (taskAmount == taskList.length) {
                 Task[] newTaskList = new Task[(int) (taskList.length * 1.5 + 1)];
-                System.arraycopy(taskList, 0, newTaskList, 0, size());
+                System.arraycopy(taskList, 0, newTaskList, 0, taskAmount);
                 taskList = newTaskList;
             }
             taskList[taskAmount] = task;
@@ -36,15 +29,21 @@ public class ArrayTaskList {
 
     public boolean remove(Task task) {
         if (task != null) {
-            for (int i = 0; i < size(); i++) {
-                if (getTask(i).equals(task)) {
-                    System.arraycopy(taskList, (i + 1), taskList, i, size() - (i + 1));
+            for (int i = 0; i < taskAmount; i++) {
+                if (taskList[i].equals(task)) {
+                    System.arraycopy(taskList, (i + 1), taskList, i, taskAmount - (i + 1));
                     taskList[taskAmount - 1] = null;
                     taskAmount--;
                     return true;
                 }
+                if (taskList.length / taskAmount > 1.5) {
+                    Task[] newTaskList = new Task[(int) (taskList.length / 1.5) + 1];
+                    System.arraycopy(taskList, 0, newTaskList, 0, taskAmount);
+                    taskList = newTaskList;
+                }
             }
         }
+
         return false;
     }
 
@@ -52,8 +51,18 @@ public class ArrayTaskList {
         return taskAmount;
     }
 
-    Task getTask(int i) {
+    public Task getTask(int i) {
         return taskList[i];
+    }
+
+    public ArrayTaskList incoming(int from, int to) {
+        ArrayTaskList fromTo = new ArrayTaskList();
+        for (int i = 0; i < taskAmount; i++) {
+            if (getTask(i).nextTimeAfter(from) > from && getTask(i).nextTimeAfter(from) < to) {
+                fromTo.add(getTask(i));
+            }
+        }
+        return fromTo;
     }
 
 }

@@ -9,7 +9,7 @@ import static com.netcracker.eductr.tasks.tests.model.BaseCreator.isOld;
 import static com.netcracker.eductr.tasks.tests.utils.Types.classTypes.*;
 
 public class ClassFinder {
-	private static final String BASE_PACKAGE = "ua.edu.sumdu.j2se.studentName.tasks";
+	private static final String BASE_PACKAGE = "ua.edu.sumdu.j2se.say.tasks";
 
 	public static boolean checkClassExistence(Types.classTypes type) {
 		try {
@@ -98,19 +98,26 @@ public class ClassFinder {
 				case GET_STREAM:
 					return getTargetClass(clazz).getMethod("getStream") != null;
 				case INCOMING:
-					return getTargetClass(clazz).getMethod("incoming", Iterable.class, LocalDateTime.class, LocalDateTime.class) != null;
+					return getTargetClass(clazz).getMethod("incoming", Iterable.class, LocalDateTime.class,
+							LocalDateTime.class) != null;
 				case READ_BINARY:
-					return getTargetClass(clazz).getMethod("read", getTargetClass(ABSTRACT_LIST), InputStream.class) != null
-							&& getTargetClass(clazz).getMethod("readBinary", getTargetClass(ABSTRACT_LIST), File.class) != null;
+					return getTargetClass(clazz).getMethod("read", getTargetClass(ABSTRACT_LIST),
+							InputStream.class) != null
+							&& getTargetClass(clazz).getMethod("readBinary", getTargetClass(ABSTRACT_LIST),
+									File.class) != null;
 				case WRITE_BINARY:
-					return getTargetClass(clazz).getMethod("write", getTargetClass(ABSTRACT_LIST), OutputStream.class) != null
-							&& getTargetClass(clazz).getMethod("writeBinary", getTargetClass(ABSTRACT_LIST), File.class) != null;
+					return getTargetClass(clazz).getMethod("write", getTargetClass(ABSTRACT_LIST),
+							OutputStream.class) != null
+							&& getTargetClass(clazz).getMethod("writeBinary", getTargetClass(ABSTRACT_LIST),
+									File.class) != null;
 				case READ:
 					return getTargetClass(clazz).getMethod("read", getTargetClass(ABSTRACT_LIST), Reader.class) != null
-							&& getTargetClass(clazz).getMethod("readText", getTargetClass(ABSTRACT_LIST), File.class) != null;
+							&& getTargetClass(clazz).getMethod("readText", getTargetClass(ABSTRACT_LIST),
+									File.class) != null;
 				case WRITE:
 					return getTargetClass(clazz).getMethod("write", getTargetClass(ABSTRACT_LIST), Writer.class) != null
-							&& getTargetClass(clazz).getMethod("writeText", getTargetClass(ABSTRACT_LIST), File.class) != null;
+							&& getTargetClass(clazz).getMethod("writeText", getTargetClass(ABSTRACT_LIST),
+									File.class) != null;
 				case GET_TIME:
 					return getTargetClass(clazz).getMethod("getTime") != null;
 				case GET_START_TIME:
@@ -173,7 +180,8 @@ public class ClassFinder {
 				case TITLE_START_END_INTERVAL:
 					return (isOld()
 							? getTargetClass(clazz).getConstructor(String.class, int.class, int.class, int.class)
-							: getTargetClass(clazz).getConstructor(String.class, LocalDateTime.class, LocalDateTime.class, int.class)) != null;
+							: getTargetClass(clazz).getConstructor(String.class, LocalDateTime.class,
+									LocalDateTime.class, int.class)) != null;
 			}
 		} catch (NoSuchMethodException | ClassNotFoundException e) {
 		}

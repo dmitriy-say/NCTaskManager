@@ -67,7 +67,21 @@ public class Main {
 		s.setActive(true);
 		t.setActive(true);
 
-		System.out.println(list.size());
+		list.remove(t);
+		list.remove(s);
+		list.remove(r);
+		list.remove(q);
+		list.remove(p);
+		list.remove(o);
+		list.remove(n);
+		list.remove(m);
+		list.remove(l);
+		list.remove(k);
+		list.remove(j);
+		list.remove(i);
+
+		System.out.println("list.size:" + list.size());
+		System.out.println("list.length:" + list.sizeAll());
 		System.out.println(a.nextTimeAfter(1));
 		System.out.println(list.incoming(10, 100).size());
 	}

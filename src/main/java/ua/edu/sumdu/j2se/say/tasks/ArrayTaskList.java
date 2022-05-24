@@ -6,15 +6,17 @@ public class ArrayTaskList {
 
     /**
      * Конструктор, що створює список задач
-     * з кількістю 0 (за замовчуванням).
+     * з кількістю 0 (за замовчуванням). При додаванні
+     * до списку задач його місткість розширюється.
      */
     public ArrayTaskList() {
         taskList = new Task[0];
     }
-    public ArrayTaskList(int size) {
-        taskList = new Task[size];
-    }
-
+    /**
+     * Метод, що додає до списку вказану задачу
+     * @param task - задача, яку необхідно додати
+     * до списку.
+     */
     public void add(Task task) {
         if (task != null) {
             if (taskAmount == taskList.length) {
@@ -26,7 +28,13 @@ public class ArrayTaskList {
             taskAmount++;
         }
     }
-
+    /**
+     * Метод, що видаляє задачу зі списку і повертає істину,
+     * якщо така задача була у списку. Якщо у списку було декілька
+     * таких задач, видаляється перша з них.
+     * @param task - задача, яку необхідно видалити.
+     * @return - якщо така задача є у списку - true, якщо ні - false.
+     */
     public boolean remove(Task task) {
         if (task != null) {
             for (int i = 0; i < taskAmount; i++) {
@@ -43,18 +51,36 @@ public class ArrayTaskList {
                 }
             }
         }
-
         return false;
     }
+    /**
+     * Метод, що повертає кількість задач у списку.
+     * @return taskAmount - кількість задач у списку.
+     */
+    public int size() { return taskAmount; }
+    /**
+     * Метод, що повертає мысткысть списку.
+     * @return taskList.length - довжина масиву списку.
+     */
+    public int sizeAll() { return taskList.length; }
 
-    public int size() {
-        return taskAmount;
-    }
-
+    /**
+     * Метод, що повертає задачу, яка знаходиться на
+     * вказаному місці у списку. Перша задача має індекс 0.
+     * @param i - місце задачі у списку.
+     * @return taskList[i].
+     */
     public Task getTask(int i) {
         return taskList[i];
     }
-
+    /**
+     * Метод, що повертає підмножину задач, які заплановані
+     * на виконання хоча б раз після часу from і не пізніше ніж to.
+     * @param from - час, з якого відбираються задачі.
+     * @param to - час, до якого відбираються задачі.
+     * @return - список задач, які заплановані на виконання
+     * від після часу from і не пізніше ніж to.
+     */
     public ArrayTaskList incoming(int from, int to) {
         ArrayTaskList fromTo = new ArrayTaskList();
         for (int i = 0; i < taskAmount; i++) {

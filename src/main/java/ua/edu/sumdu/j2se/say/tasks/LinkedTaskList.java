@@ -1,14 +1,12 @@
 package ua.edu.sumdu.j2se.say.tasks;
 
 public class LinkedTaskList {
-    private Node firstTask;
-    private Node lastTask;
+    private Node head;
     private int size;
 
     private static class Node {
-        Task task;
-        Node nextTask;
-        Node previousTask;
+        private final Task task;
+        private Node next;
 
         public Node(Task task) {
             this.task = task;
@@ -16,93 +14,67 @@ public class LinkedTaskList {
     }
 
     public void add(Task task) {
-        Node newNode = new Node(task);
-        if (firstTask == null) {
-            newNode.nextTask = null;
-            newNode.previousTask = null;
-            firstTask = newNode;
+        if (head == null) {
+            head = new Node(task);
         } else {
-            lastTask.nextTask = newNode;
-            newNode.previousTask = lastTask;
+            Node currentNode = head;
+            while (currentNode.next != null) {
+                currentNode = currentNode.next;
+            }
+            currentNode.next = new Node(task);
         }
-        lastTask = newNode;
         size++;
     }
 
-
-    public Task getTask(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
-        Node result = firstTask;
-        for (int i = 0; i < index; i++) {
-            result = result.nextTask;
-        }
-
-        return result.task;
-    }
-}
-/*
     public boolean remove(Task task) {
-
-        if (size == 0) {
+        if (head == null) {
             return false;
-        } else if (size == 1) {
-            firstTask = null;
-            lastTask = null;
-            size = 0;
-            return true;
-        }
-
-        Node nodeBefore = findNodeBefore(task);
-
-        if (nodeBefore.task.equals(null)) {
-            firstTask = firstTask.nextTask;
-            size--;
-            return true;
-        } else if (!nodeBefore.task.equals(null)) {
-            if (lastTask.task == task) {
-                nodeBefore.nextTask = null;
-                lastTask = nodeBefore;
-            } else {
-                nodeBefore.nextTask = nodeBefore.nextTask.nextTask;
+        } else if (head.task.equals(task)) {
+                head = head.next;
+                size--;
+                return true;
+        } else {
+            Node currentNode = head;
+            while (currentNode.next != null) {
+                if (currentNode.next.task.equals(task)){
+                    currentNode.next = currentNode.next.next;
+                    size--;
+                    return true;
+                }
+                currentNode = currentNode.next;
             }
-            size--;
-            return true;
         }
         return false;
     }
 
-    private Node findNodeBefore(Task task) {
-        if (firstTask.task.equals(task)) {
-            return new Node(task);
-        }
+    public int size() { return size; }
 
-        Node node = firstTask;
-        while (!node.nextTask.equals(null)) {
-            if (node.nextTask.task.equals(task)) {
-                return node;
-            }
-            node = node.nextTask;
+    public Task getTask(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("The index is outside the list");
         }
-        return null;
+        Node currentNode  = head;
+        int i = 0;
+        while (currentNode.next != null){
+            if (i == index) break;
+            currentNode = currentNode.next;
+            i++;
+        }
+        return currentNode.task;
     }
-
-    private Node findNodeBeforeByIndex(int index) {
-        if (index <= 0 || index > size - 1) {
-            return null;
-        }
-
-        int count = 0;
-        Node node = first;
-        while (node.next != null) {
-            if (count == index - 1) {
-                return node;
+    public LinkedTaskList incoming(int from, int to) {
+        LinkedTaskList fromTo = new LinkedTaskList();
+        if (from < 0) {
+            throw new IllegalArgumentException("The time cannot be less than zero!");
+        } else if (from > to) {
+            throw new IllegalArgumentException("Time \"to\" must be greater than \"from\"!");
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (getTask(i).nextTimeAfter(from) > from && getTask(i).nextTimeAfter(from) < to) {
+                    fromTo.add(getTask(i));
+                }
             }
-            count++;
-            node = node.next;
+            return fromTo;
         }
-        return null;
     }
 }
-*/

@@ -18,7 +18,6 @@ public class ArrayTaskList {
      * до списку.
      */
     public void add(Task task) {
-        if (task != null) {
             if (taskAmount == taskList.length) {
                 Task[] newTaskList = new Task[(int) (taskList.length * 1.5 + 1)];
                 System.arraycopy(taskList, 0, newTaskList, 0, taskAmount);
@@ -26,7 +25,6 @@ public class ArrayTaskList {
             }
             taskList[taskAmount] = task;
             taskAmount++;
-        }
     }
     /**
      * Метод, що видаляє задачу зі списку і повертає істину,
@@ -36,7 +34,6 @@ public class ArrayTaskList {
      * @return - якщо така задача є у списку - true, якщо ні - false.
      */
     public boolean remove(Task task) {
-        if (task != null) {
             for (int i = 0; i < taskAmount; i++) {
                 if (taskList[i].equals(task)) {
                     System.arraycopy(taskList, (i + 1), taskList, i, taskAmount - (i + 1));
@@ -50,7 +47,6 @@ public class ArrayTaskList {
                     taskList = newTaskList;
                 }
             }
-        }
         return false;
     }
     /**
@@ -63,15 +59,17 @@ public class ArrayTaskList {
      * @return taskList.length - довжина масиву списку.
      */
     public int sizeAll() { return taskList.length; }
-
     /**
      * Метод, що повертає задачу, яка знаходиться на
      * вказаному місці у списку. Перша задача має індекс 0.
-     * @param i - місце задачі у списку.
+     * @param index - місце задачі у списку.
      * @return taskList[i].
      */
-    public Task getTask(int i) {
-        return taskList[i];
+    public Task getTask(int index) {
+        if (index < 0 || index > taskAmount-1) {
+            throw new IndexOutOfBoundsException("The index is outside the array");
+        }
+        return taskList[index];
     }
     /**
      * Метод, що повертає підмножину задач, які заплановані
@@ -83,12 +81,17 @@ public class ArrayTaskList {
      */
     public ArrayTaskList incoming(int from, int to) {
         ArrayTaskList fromTo = new ArrayTaskList();
-        for (int i = 0; i < taskAmount; i++) {
-            if (getTask(i).nextTimeAfter(from) > from && getTask(i).nextTimeAfter(from) < to) {
-                fromTo.add(getTask(i));
+        if (from < 0) {
+            throw new IllegalArgumentException("The time cannot be less than zero!");
+        } else if (from > to) {
+            throw new IllegalArgumentException("Time \"to\" must be greater than \"from\"!");
+        } else {
+            for (int i = 0; i < taskAmount; i++) {
+                if (getTask(i).nextTimeAfter(from) > from && getTask(i).nextTimeAfter(from) < to) {
+                    fromTo.add(getTask(i));
+                }
             }
+            return fromTo;
         }
-        return fromTo;
     }
-
 }

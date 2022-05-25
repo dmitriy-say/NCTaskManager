@@ -38,26 +38,43 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>3.1.2</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                    <consoleOutput>true</consoleOutput>
-                    <failsOnError>false</failsOnError>
-                    <failOnViolation>true</failOnViolation>
-                    <violationSeverity>error</violationSeverity>
-                    <linkXRef>false</linkXRef>
-                </configuration>
+                <version>10.2</version>
+                <dependencies>
+                  <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>10.2</version>
+                  </dependency>
+                </dependencies>
+            <!--  Specifying configuration here will take effect on the execution
+             of "mvn checkstyle:checkstyle",
+             but will not take effect on the execution of "mvn site"   -->
                 <executions>
                     <execution>
-                        <id>validate</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
+                        <id>sevntu-checkstyle-check</id>
+                        <phase>verify</phase>
+                            <configuration>
+                                <configLocation> ${project.basedir}/config/checkstyle_sevntu_checks.xml </configLocation>
+                                <failOnViolation>true</failOnViolation>
+                                <includeResources>false</includeResources>
+                                <includeTestResources>false</includeTestResources>
+                                <logViolationsToConsole>true</logViolationsToConsole>
+                                <maxAllowedViolations>0</maxAllowedViolations>
+                                <violationSeverity>error</violationSeverity>
+                                <cacheFile>${project.build.directory}/cachefile_sevntu</cacheFile>
+                                <propertyExpansion>project.basedir=${project.basedir}</propertyExpansion>
+                                <sourceDirectories>
+                                <sourceDirectory>${project.basedir}/src</sourceDirectory>
+                                </sourceDirectories>
+                                <excludes> **/it/resources/**/*,**/it/resources-noncompilable/**/*, ,**/test/resources/**/*,**/test/resources-noncompilable/**/*, **/gen/**, **/test/** </excludes>
+                            </configuration>
+             <goals>
+             <goal>check</goal>
+             </goals>
+             </execution>
+             </executions>
+             </plugin>
+             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>3.16.0</version>

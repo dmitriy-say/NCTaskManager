@@ -74,10 +74,16 @@ public class Task {
      * @param time  - час, на який заплановане виконання задачі.
      */
     public Task(String title, int time) {
-        this.title = title;
-        this.time = time;
-        this.active = false;
-        this.repeated = false;
+        if (title == null) {
+            throw new NullPointerException("It doesn't make sense to create an untitled task!");
+        } else if (time < 0) {
+            throw new IllegalArgumentException("Time cannot be negative!");
+        } else {
+            this.title = title;
+            this.time = time;
+            this.active = false;
+            this.repeated = false;
+        }
     }
 
     /**
@@ -92,12 +98,22 @@ public class Task {
      * @param interval - інтервал, з яким повторюється задача.
      */
     public Task(String title, int start, int end, int interval) {
-        this.title = title;
-        this.start = start;
-        this.end = end;
-        this.interval = interval;
-        this.active = false;
-        this.repeated = true;
+        if (title == null) {
+            throw new NullPointerException("It doesn't make sense to create an untitled task!");
+        } else if (start < 0) {
+            throw new IllegalArgumentException("Time cannot be negative!");
+        } else if (end < start) {
+            throw new IllegalArgumentException("End time must be longer than start time!");
+        } else if (interval <= 0) {
+            throw new IllegalArgumentException("The repetition interval of the task must be greater than zero!");
+        } else {
+            this.title = title;
+            this.start = start;
+            this.end = end;
+            this.interval = interval;
+            this.active = false;
+            this.repeated = true;
+        }
     }
 
     /**
@@ -115,7 +131,11 @@ public class Task {
      * @param title - назва задачі.
      */
     public void setTitle(String title) {
-        this.title = title;
+        if (title == null) {
+            throw new NullPointerException("It doesn't make sense to create an untitled task!");
+        } else {
+            this.title = title;
+        }
     }
 
     /**
@@ -158,9 +178,13 @@ public class Task {
      * @param time - час початку виконання задачі.
      */
     public void setTime(int time) {
-        this.time = time;
-        if (repeated) {
-            repeated = false;
+        if (time < 0) {
+            throw new IllegalArgumentException("Time cannot be negative!");
+        } else {
+            this.time = time;
+            if (repeated) {
+                repeated = false;
+            }
         }
     }
 
@@ -210,10 +234,18 @@ public class Task {
      * @param interval - інтервал, з яким повторюється задача.
      */
     public void setTime(int start, int end, int interval) {
-        this.start = start;
-        this.end = end;
-        this.interval = interval;
-        repeated = true;
+        if (start < 0) {
+            throw new IllegalArgumentException("Time cannot be negative!");
+        } else if (end < start) {
+            throw new IllegalArgumentException("End time must be longer than start time!");
+        } else if (interval <= 0) {
+            throw new IllegalArgumentException("The repetition interval of the task must be greater than zero!");
+        } else {
+            this.start = start;
+            this.end = end;
+            this.interval = interval;
+            repeated = true;
+        }
     }
 
     /**
@@ -234,6 +266,9 @@ public class Task {
      * @return - наступний час виконання задачі.
      */
     public int nextTimeAfter(int current) {
+        if (current < 0) {
+            throw new IllegalArgumentException("Time should be positive");
+        }
         if (!active) {
             return -1;
         }

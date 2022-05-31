@@ -294,4 +294,17 @@ public class Task {
 
         }
     }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "title='" + title + '\'' +
+                ", active=" + active +
+                ", repeated=" + repeated +
+                ", time=" + time +
+                ", start=" + start +
+                ", end=" + end +
+                ", interval=" + interval +
+                '}';
+    }
 }

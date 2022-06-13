@@ -1,5 +1,9 @@
 package ua.edu.sumdu.j2se.say.tasks;
 
+import static ua.edu.sumdu.j2se.say.tasks.ListTypes.types.ARRAY;
+import static ua.edu.sumdu.j2se.say.tasks.ListTypes.types.LINKED;
+import static ua.edu.sumdu.j2se.say.tasks.TaskListFactory.createTaskList;
+
 public class Main {
 	public static void main(String[] args) {
 		System.out.println("Hello");
@@ -24,28 +28,6 @@ public class Main {
 		Task s = new Task("S", 0, 100,10);
 		Task t = new Task("T", 10, 1000,100);
 
-		ArrayTaskList al = new ArrayTaskList();
-		al.add(a);
-		al.add(b);
-		al.add(c);
-		al.add(d);
-		al.add(e);
-		al.add(f);
-		al.add(g);
-		al.add(h);
-		al.add(i);
-		al.add(j);
-		al.add(k);
-		al.add(l);
-		al.add(m);
-		al.add(n);
-		al.add(o);
-		al.add(p);
-		al.add(q);
-		al.add(r);
-		al.add(s);
-		al.add(t);
-
 		a.setActive(true);
 		b.setActive(true);
 		c.setActive(true);
@@ -67,6 +49,36 @@ public class Main {
 		s.setActive(true);
 		t.setActive(true);
 
+		System.out.println("a: " + a);
+		System.out.println("a.nextTimeAfter(10): " + a.nextTimeAfter(10));
+		System.out.println("s.nextTimeAfter(10): " + s.nextTimeAfter(10));
+
+		AbstractTaskList al = createTaskList(ARRAY);
+		AbstractTaskList ll = createTaskList(LINKED);
+
+		al.add(a);
+		al.add(b);
+		al.add(c);
+		al.add(d);
+		al.add(e);
+		al.add(f);
+		al.add(g);
+		al.add(h);
+		al.add(i);
+		al.add(j);
+		al.add(k);
+		al.add(l);
+		al.add(m);
+		al.add(n);
+		al.add(o);
+		al.add(p);
+		al.add(q);
+		al.add(r);
+		al.add(s);
+		al.add(t);
+
+
+
 		al.remove(t);
 		al.remove(s);
 		al.remove(r);
@@ -80,12 +92,11 @@ public class Main {
 		al.remove(j);
 		al.remove(i);
 
-		System.out.println("al.size:" + al.size());
-		System.out.println("al.length:" + al.sizeAll());
-		System.out.println(a.nextTimeAfter(1));
-		System.out.println(al.incoming(10, 100).size());
+		System.out.println("al: " + al);
+		System.out.println("al.incoming(10, 100)" + al.incoming(10, 100));
+		System.out.println("al size: " + al.size());
+		System.out.println("al length: " + al.thisArraySize());
 
-		LinkedTaskList ll = new LinkedTaskList();
 		ll.add(a);
 		ll.add(b);
 		ll.add(c);
@@ -106,6 +117,11 @@ public class Main {
 		ll.add(r);
 		ll.add(s);
 		ll.add(t);
-		System.out.println("ll size:" + ll.size());
+
+
+		System.out.println("ll: " + ll);
+		System.out.println("al.incoming(10, 100)" + al.incoming(10, 100));
+		System.out.println("ll.size: " + ll.size());
+
 	}
 }

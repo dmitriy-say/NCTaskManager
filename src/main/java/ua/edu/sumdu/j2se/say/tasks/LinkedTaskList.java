@@ -1,19 +1,41 @@
 package ua.edu.sumdu.j2se.say.tasks;
 
-public class LinkedTaskList {
+import static ua.edu.sumdu.j2se.say.tasks.ListTypes.types.LINKED;
+
+public class LinkedTaskList extends AbstractTaskList {
+    /**
+     * The first node of the list.
+     */
     private Node head;
-    private int size;
+
 
     private static class Node {
+        /**
+         * The task node includes.
+         */
         private final Task task;
+        /**
+         * Next node reference.
+         */
         private Node next;
 
-        public Node(Task task) {
+        Node(final Task task) {
             this.task = task;
         }
     }
 
-    public void add(Task task) {
+    /**
+     * The constructor needed only to make this type LINKED.
+     */
+    public LinkedTaskList() {
+        this.type = LINKED;
+    }
+
+    /**
+     * This method can add a task to the list.
+     * @param task to be added.
+     */
+    public void add(final Task task) {
         if (head == null) {
             head = new Node(task);
         } else {
@@ -26,7 +48,12 @@ public class LinkedTaskList {
         size++;
     }
 
-    public boolean remove(Task task) {
+    /**
+     * This method can remove task from the list.
+     * @param task should be removed.
+     * @return true if task removed, false if task not found.
+     */
+    public boolean remove(final Task task) {
         if (head == null) {
             return false;
         } else if (head.task.equals(task)) {
@@ -36,7 +63,7 @@ public class LinkedTaskList {
         } else {
             Node currentNode = head;
             while (currentNode.next != null) {
-                if (currentNode.next.task.equals(task)){
+                if (currentNode.next.task.equals(task)) {
                     currentNode.next = currentNode.next.next;
                     size--;
                     return true;
@@ -47,34 +74,36 @@ public class LinkedTaskList {
         return false;
     }
 
-    public int size() { return size; }
+    /**
+     * This method used only for arraylist.
+     */
+    @Override
+    public int thisArraySize() {
+        return 0;
+    }
 
-    public Task getTask(int index) {
+
+    /**
+     * This method can get the task from the
+     * linked list by its pseudo-index.
+     * @param index - tasks pseudo-index.
+     * @return task.
+     */
+    public Task getTask(final int index) {
         if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("The index is outside the list");
+            throw new IndexOutOfBoundsException(
+                    "The index is outside the list");
         }
         Node currentNode  = head;
         int i = 0;
-        while (currentNode.next != null){
-            if (i == index) break;
-            currentNode = currentNode.next;
-            i++;
+        while (currentNode.next != null) {
+            if (i == index) {
+                break;
+            }
+                currentNode = currentNode.next;
+                i++;
         }
         return currentNode.task;
     }
-    public LinkedTaskList incoming(int from, int to) {
-        LinkedTaskList fromTo = new LinkedTaskList();
-        if (from < 0) {
-            throw new IllegalArgumentException("The time cannot be less than zero!");
-        } else if (from > to) {
-            throw new IllegalArgumentException("Time \"to\" must be greater than \"from\"!");
-        } else {
-            for (int i = 0; i < size; i++) {
-                if (getTask(i).nextTimeAfter(from) > from && getTask(i).nextTimeAfter(from) < to) {
-                    fromTo.add(getTask(i));
-                }
-            }
-            return fromTo;
-        }
-    }
+
 }

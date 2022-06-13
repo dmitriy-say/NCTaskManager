@@ -12,7 +12,6 @@ public abstract class AbstractTaskList extends TaskListFactory implements Iterab
      */
     protected transient int size;
     protected transient int modCount = 0;
-
     /**
      * Adds the task to the list.
      * @param task - task to add.
@@ -70,7 +69,6 @@ public abstract class AbstractTaskList extends TaskListFactory implements Iterab
     public AbstractTaskList clone() throws CloneNotSupportedException {
         return (AbstractTaskList) super.clone();
     }
-
     public String toString() {
         return "AbstractTaskList{"
                 + "type=" + type
@@ -100,7 +98,6 @@ public abstract class AbstractTaskList extends TaskListFactory implements Iterab
      * @return an iterator over the elements in this list in proper sequence
      */
     public abstract Iterator<Task> iterator();
-
     /**
      * {@inheritDoc}
      *
@@ -127,19 +124,12 @@ public abstract class AbstractTaskList extends TaskListFactory implements Iterab
     public abstract ListIterator<Task> listIterator(final int index);
     public abstract ListIterator<Task> listIterator();
 
-
-
-
-
     // ------------------Service methods----------------------------
-
-
 
     /**
      * Tells if the argument is the index of a valid position for an
      * iterator or an add operation.
      */
-
     protected void checkPositionIndex(int index) {
         if (index < 0 || index > size)
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
@@ -151,7 +141,8 @@ public abstract class AbstractTaskList extends TaskListFactory implements Iterab
         if (index > size || index < 0)
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
     }
-// Comparison and hashing
+
+    // ---------------Comparison and hashing-------------------------
 
     /**
      * Compares the specified object with this list for equality.  Returns
@@ -191,7 +182,6 @@ public abstract class AbstractTaskList extends TaskListFactory implements Iterab
         }
         return !(e1.hasNext() || e2.hasNext());
     }
-
     /**
      * Returns the hash code value for this list.
      *

@@ -14,7 +14,6 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
      * Default initial capacity.
      */
     private static final int DEFAULT_CAPACITY = 10;
-    private static final Task[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA ={};
     /**
      * Creates a list of 10 tasks (default).
      * When you add tasks to the list, its capacity expands.
@@ -26,7 +25,7 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
     /**
      * Adds the specified task to the list.
      *
-     * @param task - task to add
+     * @param task task to add
      */
     public void add(Task task) {
         if (size == taskList.length) {
@@ -50,8 +49,6 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
         size++;
         modCount++;
     }
-
-
     /**
      * Removes a task from the list and returns the truth,
      * if such a task was on the list. If there were several on the list
@@ -94,7 +91,7 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
         return taskList[index];
     }
     public Task set(int index, Task task) {
-        Objects.checkIndex(index, size);
+        checkPositionIndex(index);
         Task oldValue = taskList[index];
         taskList[index] = task;
         return oldValue;
@@ -105,13 +102,6 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
      */
     public int thisArraySize() {
         return taskList.length;
-    }
-
-
-    private void checkForComodification(final int expectedModCount) {
-        if (modCount != expectedModCount) {
-            throw new ConcurrentModificationException();
-        }
     }
     /**
      * Returns the hash code value for this list.
@@ -124,27 +114,11 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
      * taskList1 and taskList2, as required by the general contract of Object.hashCode.
      */
     public int hashCode() {
-        int expectedModCount = modCount;
-        int hash = hashCodeRange(0, size);
-        checkForComodification(expectedModCount);
-        return hash;
-    }
-    int hashCodeRange(int from, int to) {
-        final Object[] es = taskList;
-        if (to > es.length) {
-            throw new ConcurrentModificationException();
-        }
-        int hashCode = 1;
-        for (int i = from; i < to; i++) {
-            Object e = es[i];
-            hashCode = 31 * hashCode + (e == null ? 0 : e.hashCode());
-        }
-        return hashCode;
+        return super.hashCode();
     }
     /**
      * Returns a shallow copy of this {@code ArrayList} instance.  (The
      * elements themselves are not copied.)
-     *
      * @return a clone of this {@code ArrayList} instance
      */
     public ArrayTaskList clone() throws CloneNotSupportedException {
@@ -154,8 +128,17 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
             return v;
 
     }
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
 
     // ---------------------------------Iterators-------------------------------------
+
     /**
      * Returns a list iterator over the elements in this list (in proper
      * sequence), starting at the specified position in the list.
@@ -172,7 +155,6 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
         checkPositionIndex(index);
         return new ArrayTaskList.ListItr(index);
     }
-
     /**
      * Returns a list iterator over the elements in this list (in proper
      * sequence).
@@ -184,7 +166,6 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
     public ListIterator<Task> listIterator() {
         return new ArrayTaskList.ListItr(0);
     }
-
     /**
      * Returns an iterator over the elements in this list in proper sequence.
      *
@@ -195,7 +176,6 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
     public Iterator<Task> iterator() {
         return new ArrayTaskList.Itr();
     }
-
     private class Itr implements Iterator<Task> {
         int cursor;       // index of next element to return
         int lastRet = -1; // index of last element returned; -1 if no such
@@ -258,7 +238,6 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
                 throw new ConcurrentModificationException();
         }
     }
-
     /**
      * An optimized version of AbstractList.ListItr
      */

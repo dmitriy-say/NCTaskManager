@@ -87,7 +87,6 @@ public class Task implements Cloneable {
             this.repeated = false;
         }
     }
-
     /**
      * Конструктор, що конструює неактивну задачу,
      * яка виконується у заданому проміжку часу
@@ -117,7 +116,6 @@ public class Task implements Cloneable {
             this.repeated = true;
         }
     }
-
     /**
      * Метод для зчитування назви задачі.
      * 
@@ -126,11 +124,10 @@ public class Task implements Cloneable {
     public String getTitle() {
         return title;
     }
-
     /**
      * Метод для встановлення назви задачі.
      * 
-     * @param title - назва задачі.
+     * @param title назва задачі.
      */
     public void setTitle(String title) {
         if (title == null) {
@@ -139,7 +136,6 @@ public class Task implements Cloneable {
             this.title = title;
         }
     }
-
     /**
      * Метод для зчитування стану задачі.
      * 
@@ -148,7 +144,6 @@ public class Task implements Cloneable {
     public boolean isActive() {
         return active;
     }
-
     /**
      * Метод для встановлення стану задачі.
      * 
@@ -157,11 +152,10 @@ public class Task implements Cloneable {
     public void setActive(boolean active) {
         this.active = active;
     }
-
     /**
      * Метод для зчитування часу виконання для задач, що не повторюються.
      * 
-     * @return - якщо задача не повторюється повертає час початку виконання
+     * @return якщо задача не повторюється повертає час початку виконання
      *         задачі. Якщо задача повторюється повертає час початку повторення
      *         задачі.
      */
@@ -172,12 +166,11 @@ public class Task implements Cloneable {
             return time;
         }
     }
-
     /**
      * Метод для зміни часу виконання для задач, що не повторюються.
      * У разі, якщо задача повторювалась, вона стає такою, що не повторюється.
      * 
-     * @param time - час початку виконання задачі.
+     * @param time час початку виконання задачі.
      */
     public void setTime(int time) {
         if (time < 0) {
@@ -189,7 +182,6 @@ public class Task implements Cloneable {
             }
         }
     }
-
     /**
      * Метод для зчитування часу початку виконання
      * для задач, що повторюються.
@@ -202,7 +194,6 @@ public class Task implements Cloneable {
     public int getStartTime() {
         return repeated ? start : time;
     }
-
     /**
      * Метод для зчитування часу закінчення виконання
      * для задач, що повторюються.
@@ -214,7 +205,6 @@ public class Task implements Cloneable {
     public int getEndTime() {
         return repeated ? end : time;
     }
-
     /**
      * Метод для зчитування інтервалу для задач, що повторюються.
      * 
@@ -224,7 +214,6 @@ public class Task implements Cloneable {
     public int getRepeatInterval() {
         return repeated ? interval : 0;
     }
-
     /**
      * Метод для зміни часу початку, часу закінчення та інтервалу для
      * задач, що повторюються. У разі, якщо задача не повторювалася, то
@@ -249,7 +238,6 @@ public class Task implements Cloneable {
             repeated = true;
         }
     }
-
     /**
      * Метод для перевірки повторюваності задачі.
      * 
@@ -258,7 +246,6 @@ public class Task implements Cloneable {
     public boolean isRepeated() {
         return repeated;
     }
-
     /**
      * Метод, що повертає час наступного виконання задачі
      * після вказаного часу current. Якщо після вказаного часу
@@ -297,10 +284,8 @@ public class Task implements Cloneable {
         }
     }
     public Task clone () throws CloneNotSupportedException {
-
         return (Task) super.clone();
     }
-
     @Override
     public String toString() {
         return "Task{" +
@@ -313,17 +298,13 @@ public class Task implements Cloneable {
                 ", interval=" + interval +
                 '}';
     }
-
     public boolean equals(Object other) {
         if (other == this) {
             return true;
         }
-
         if (other == null || getClass() != other.getClass()) {
             return false;
         }
-
-
         return Objects.equals(title, ((Task) other).title)
                 && active == ((Task) other).active
                 && repeated == ((Task) other).repeated
@@ -332,7 +313,6 @@ public class Task implements Cloneable {
                 && end == ((Task) other).end
                 && interval == ((Task) other).interval;
     }
-
     @Override
     public int hashCode() {
         int result = title == null ? 0 : title.hashCode();

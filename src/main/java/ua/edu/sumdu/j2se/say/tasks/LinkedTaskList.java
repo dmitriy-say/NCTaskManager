@@ -6,10 +6,8 @@ import java.util.function.Consumer;
 import static ua.edu.sumdu.j2se.say.tasks.ListTypes.types.LINKED;
 
 public class LinkedTaskList extends AbstractTaskList implements Cloneable {
-
     private transient Node<Task> first;
     private transient Node<Task> last;
-
 
     /**
      * The constructor needed only to make this type LINKED.
@@ -17,7 +15,6 @@ public class LinkedTaskList extends AbstractTaskList implements Cloneable {
     public LinkedTaskList() {
         this.type = LINKED;
     }
-
     public void add(Task task) {
         final Node<Task> l = last;
         final Node<Task> newNode = new Node<>(l, task, null);
@@ -29,7 +26,6 @@ public class LinkedTaskList extends AbstractTaskList implements Cloneable {
         size++;
         modCount++;
     }
-
     public boolean remove(Task task) {
         if (task == null) {
             for (Node<Task> x = first; x != null; x = x.next) {
@@ -48,16 +44,14 @@ public class LinkedTaskList extends AbstractTaskList implements Cloneable {
         }
         return false;
     }
-
     public Task getTask(final int index) {
         checkElementIndex(index);
         return node(index).task;
     }
-
     public LinkedTaskList clone() throws CloneNotSupportedException {
         LinkedTaskList clone = (LinkedTaskList) super.clone();
         // Put clone into "virgin" state
-        clone.first = null;
+        clone.first = clone.last = null;
         clone.size = 0;
         clone.modCount = 0;
         // Initialize clone with our elements
@@ -65,116 +59,21 @@ public class LinkedTaskList extends AbstractTaskList implements Cloneable {
             clone.add(x.task);
         return clone;
     }
-
-
-
-
-
-    //------------- Service methods --------------------------
-
-    private void unlink(Node<Task> x) {
-
-        final Node<Task> next = x.next;
-        final Node<Task> prev = x.prev;
-
-        if (prev == null) {
-            first = next;
-        } else {
-            prev.next = next;
-            x.prev = null;
-        }
-
-        if (next == null) {
-            last = prev;
-        } else {
-            next.prev = prev;
-            x.next = null;
-        }
-
-        x.task = null;
-        size--;
-        modCount++;
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
-
-    /**
-     * Links task as last element.
-     */
-    void linkLast(Task task) {
-        final LinkedTaskList.Node<Task> l = last;
-        final LinkedTaskList.Node<Task> newNode = new LinkedTaskList.Node<>(l, task, null);
-        last = newNode;
-        if (l == null)
-            first = newNode;
-        else
-            l.next = newNode;
-        size++;
-        modCount++;
+    @Override
+    public String toString() {
+        return super.toString();
     }
-
-    /**
-     * Inserts element e before non-null Node taskNode.
-     */
-    void linkBefore(Task task, LinkedTaskList.Node<Task> taskNode) {
-        // assert taskNode != null;
-        final LinkedTaskList.Node<Task> pre = taskNode.prev;
-        final LinkedTaskList.Node<Task> newNode = new LinkedTaskList.Node<>(pre, task, taskNode);
-        taskNode.prev = newNode;
-        if (pre == null)
-            first = newNode;
-        else
-            pre.next = newNode;
-        size++;
-        modCount++;
-    }
-
-    /**
-     * This method used only for arraylist.
-     */
-    public int thisArraySize() {
-        return -1;
-    }
-
-    private boolean isElementIndex(int index) {
-        return index >= 0 && index < size;
-    }
-
-    private void checkElementIndex(int index) {
-        if (!isElementIndex(index))
-            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-    }
-
-    private String outOfBoundsMsg(int index) {
-        return "Index: " + index + ", Size: " + size;
-    }
-
-    Node<Task> node(int index) {
-
-        if (index < (size >> 1)) {
-            Node<Task> x = first;
-            for (int i = 0; i < index; i++)
-                x = x.next;
-            return x;
-        } else {
-            Node<Task> x = last;
-            for (int i = size - 1; i > index; i--)
-                x = x.prev;
-            return x;
-        }
-    }
-
-    private static class Node<Task> {
-        private Task task;
-        private Node<Task> next;
-        private Node<Task> prev;
-
-        Node(Node<Task> prev, Task task, Node<Task> next) {
-            this.task = task;
-            this.next = next;
-            this.prev = prev;
-        }
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
     }
 
     //------------------------ Iterators --------------------------
+
     public ListIterator<Task> listIterator(int index) {
         checkPositionIndex(index);
         return new LinkedTaskList.ListItr(index);
@@ -192,7 +91,7 @@ public class LinkedTaskList extends AbstractTaskList implements Cloneable {
         private int expectedModCount = modCount;
 
         ListItr(int index) {
-            // assert isPositionIndex(index);
+            assert isPositionIndex(index);
             next = (index == size) ? null : node(index);
             nextIndex = index;
         }
@@ -292,8 +191,6 @@ public class LinkedTaskList extends AbstractTaskList implements Cloneable {
             return index >= 0 && index <= size;
         }
     }
-
-
     /**
      * Adapter to provide descending iterators via ListItr.previous
      */
@@ -309,6 +206,98 @@ public class LinkedTaskList extends AbstractTaskList implements Cloneable {
             itr.remove();
         }
     }
+
+    //------------- Service methods --------------------------
+
+    private void unlink(Node<Task> x) {
+        final Node<Task> next = x.next;
+        final Node<Task> prev = x.prev;
+        if (prev == null) {
+            first = next;
+        } else {
+            prev.next = next;
+            x.prev = null;
+        }
+        if (next == null) {
+            last = prev;
+        } else {
+            next.prev = prev;
+            x.next = null;
+        }
+        x.task = null;
+        size--;
+        modCount++;
+    }
+    /**
+     * Links task as last element.
+     */
+    void linkLast(Task task) {
+        final LinkedTaskList.Node<Task> l = last;
+        final LinkedTaskList.Node<Task> newNode = new LinkedTaskList.Node<>(l, task, null);
+        last = newNode;
+        if (l == null)
+            first = newNode;
+        else
+            l.next = newNode;
+        size++;
+        modCount++;
+    }
+    /**
+     * Inserts element e before non-null Node taskNode.
+     */
+    void linkBefore(Task task, LinkedTaskList.Node<Task> taskNode) {
+        // assert taskNode != null;
+        final LinkedTaskList.Node<Task> pre = taskNode.prev;
+        final LinkedTaskList.Node<Task> newNode = new LinkedTaskList.Node<>(pre, task, taskNode);
+        taskNode.prev = newNode;
+        if (pre == null)
+            first = newNode;
+        else
+            pre.next = newNode;
+        size++;
+        modCount++;
+    }
+    /**
+     * This method used only for arraylist.
+     */
+    public int thisArraySize() {
+        return -1;
+    }
+    private boolean isElementIndex(int index) {
+        return index >= 0 && index < size;
+    }
+    private void checkElementIndex(int index) {
+        if (!isElementIndex(index))
+            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+    }
+    private String outOfBoundsMsg(int index) {
+        return "Index: " + index + ", Size: " + size;
+    }
+    Node<Task> node(int index) {
+        if (index < (size >> 1)) {
+            Node<Task> x = first;
+            for (int i = 0; i < index; i++)
+                x = x.next;
+            return x;
+        } else {
+            Node<Task> x = last;
+            for (int i = size - 1; i > index; i--)
+                x = x.prev;
+            return x;
+        }
+    }
+    private static class Node<Task> {
+        private Task task;
+        private Node<Task> next;
+        private Node<Task> prev;
+
+        Node(Node<Task> prev, Task task, Node<Task> next) {
+            this.task = task;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
 }
 
 

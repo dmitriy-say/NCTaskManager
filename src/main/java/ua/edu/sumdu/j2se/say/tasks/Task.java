@@ -1,5 +1,7 @@
 package ua.edu.sumdu.j2se.say.tasks;
 
+import java.util.Objects;
+
 /**
  * Клас об'єктів "Задача".
  * Клас, який описує об'єкти "Задача".
@@ -7,7 +9,7 @@ package ua.edu.sumdu.j2se.say.tasks;
  * @author Say Dmytro.
  * @version 1.0.
  */
-public class Task {
+public class Task implements Cloneable {
     /**
      * Назва задачі.
      * Містить деякий текст, який описує деталі задачі,
@@ -294,6 +296,10 @@ public class Task {
 
         }
     }
+    public Task clone () throws CloneNotSupportedException {
+
+        return (Task) super.clone();
+    }
 
     @Override
     public String toString() {
@@ -306,5 +312,33 @@ public class Task {
                 ", end=" + end +
                 ", interval=" + interval +
                 '}';
+    }
+
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+
+
+        return Objects.equals(title, ((Task) other).title)
+                && active == ((Task) other).active
+                && repeated == ((Task) other).repeated
+                && time == ((Task) other).time
+                && start == ((Task) other).start
+                && end == ((Task) other).end
+                && interval == ((Task) other).interval;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = title == null ? 0 : title.hashCode();
+        result += !active ? 0 : 1;
+        result += !repeated ? 0 : 1;
+        result = 31 * result + time + start + end + interval;
+        return result;
     }
 }

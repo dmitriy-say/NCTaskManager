@@ -1,5 +1,6 @@
 package ua.edu.sumdu.j2se.say.tasks;
 
+
 import static ua.edu.sumdu.j2se.say.tasks.ListTypes.types.ARRAY;
 
 public class TaskListFactory {

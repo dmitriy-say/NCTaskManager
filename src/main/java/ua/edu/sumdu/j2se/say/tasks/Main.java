@@ -5,7 +5,7 @@ import static ua.edu.sumdu.j2se.say.tasks.ListTypes.types.LINKED;
 import static ua.edu.sumdu.j2se.say.tasks.TaskListFactory.createTaskList;
 
 public class Main {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws CloneNotSupportedException {
 		System.out.println("Hello");
 		Task a = new Task("A",0);
 		Task b = new Task("B",10);
@@ -122,6 +122,42 @@ public class Main {
 		System.out.println("ll: " + ll);
 		System.out.println("al.incoming(10, 100)" + al.incoming(10, 100));
 		System.out.println("ll.size: " + ll.size());
+
+
+		for (Task abc : al
+			 ) {
+			System.out.println("abc: " + abc.toString());
+		}
+
+		AbstractTaskList al1 = al.clone();
+		System.out.println("al1: " + al1.toString());
+
+		AbstractTaskList ll1 = ll.clone();
+		System.out.println("ll1: " + ll1.toString());
+
+
+		Task zzz = a.clone();
+		System.out.println("zzz: " + zzz.toString());
+
+		System.out.println("a.hashcode: " + a.hashCode());
+		System.out.println("al.hashcode: " + al.hashCode());
+
+
+
+		System.out.println(al.getClass());
+		System.out.println(ll.getClass());
+
+		System.out.println(al instanceof AbstractTaskList);
+		System.out.println(ll instanceof AbstractTaskList);
+
+		Object obj = new ArrayTaskList();
+
+		ArrayTaskList atl1 = new ArrayTaskList();
+
+	System.out.println(al.equals(atl1));
+	System.out.println(al1.equals(ll));
+	System.out.println(atl1.getClass());
+	System.out.println(obj.getClass());
 
 	}
 }

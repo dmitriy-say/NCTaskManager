@@ -2,6 +2,7 @@ package ua.edu.sumdu.j2se.say.tasks;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static ua.edu.sumdu.j2se.say.tasks.ListTypes.types.LINKED;
 
@@ -48,6 +49,20 @@ public class LinkedTaskList extends AbstractTaskList implements Cloneable {
         checkElementIndex(index);
         return node(index).task;
     }
+
+    @Override
+    public Stream<Task> getStream() {
+        return Stream.of(toArray());
+    }
+    public Task[] toArray() {
+        Task[] result = new Task[size];
+        int i = 0;
+        for (LinkedTaskList.Node<Task> x = first; x != null; x = x.next)
+            result[i++] = x.task;
+        return result;
+    }
+
+    @Override
     public LinkedTaskList clone() throws CloneNotSupportedException {
         LinkedTaskList clone = (LinkedTaskList) super.clone();
         // Put clone into "virgin" state

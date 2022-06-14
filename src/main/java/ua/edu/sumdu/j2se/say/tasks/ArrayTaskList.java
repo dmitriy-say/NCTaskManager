@@ -2,6 +2,7 @@ package ua.edu.sumdu.j2se.say.tasks;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static ua.edu.sumdu.j2se.say.tasks.ListTypes.types.ARRAY;
 
@@ -90,6 +91,12 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
         }
         return taskList[index];
     }
+
+    @Override
+    public Stream<Task> getStream() {
+        return Arrays.stream(taskList, 0, size);
+    }
+
     public Task set(int index, Task task) {
         checkPositionIndex(index);
         Task oldValue = taskList[index];
@@ -103,24 +110,11 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
     public int thisArraySize() {
         return taskList.length;
     }
-    /**
-     * Returns the hash code value for this list.
-     * The hash code of a list is defined to be the result of the following calculation:
-     *  int hashCode = 1;
-     *  for (Task e : taskList)
-     *  hashCode = 31*hashCode + (e==null ? 0 : e.hashCode());
-     * This ensures that taskList1.equals(taskList2) implies that
-     * taskList1.hashCode()==taskList2.hashCode() for any two lists,
-     * taskList1 and taskList2, as required by the general contract of Object.hashCode.
-     */
+    @Override
     public int hashCode() {
         return super.hashCode();
     }
-    /**
-     * Returns a shallow copy of this {@code ArrayList} instance.  (The
-     * elements themselves are not copied.)
-     * @return a clone of this {@code ArrayList} instance
-     */
+    @Override
     public ArrayTaskList clone() throws CloneNotSupportedException {
             ArrayTaskList v = (ArrayTaskList) super.clone();
             v.taskList = Arrays.copyOf(taskList, size);

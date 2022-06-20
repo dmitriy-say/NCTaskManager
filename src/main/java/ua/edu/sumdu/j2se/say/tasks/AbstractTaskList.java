@@ -1,5 +1,6 @@
 package ua.edu.sumdu.j2se.say.tasks;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -44,28 +45,8 @@ public abstract class AbstractTaskList extends TaskListFactory implements Iterab
     public abstract Task getTask(int index);
     public abstract Stream<Task> getStream();
 
-    /**
-     * Returns a subset of tasks
-     * that run over a specified period of time.
-     * @param from - time from.
-     * @param to - time to.
-     * @return - subset of tasks.
-     */
-    public final AbstractTaskList incoming(final int from, final int to) {
-            if (from < 0) {
-                throw new IllegalArgumentException(
-                        "The time cannot be less than zero!");
-            } else if (from > to) {
-                throw new IllegalArgumentException(
-                        "Time \"to\" must be greater than \"from\"!");
-            } else {
-                AbstractTaskList fromTo = createTaskList(type);
-                Stream <Task> stream = getStream();
-                stream.filter(task -> task.nextTimeAfter(from) > from
-                        && task.nextTimeAfter(from) < to).forEach(fromTo::add);
-                return fromTo;
-            }
-        }
+
+
     public AbstractTaskList clone() throws CloneNotSupportedException {
         return (AbstractTaskList) super.clone();
     }

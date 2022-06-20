@@ -1,5 +1,6 @@
 package ua.edu.sumdu.j2se.say.tasks;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -36,31 +37,16 @@ public class Task implements Cloneable {
     private boolean repeated;
     /**
      * Час, на який заплановане виконання одноразової задачі.
-     * Для опису часу для початку будуть використовуватись
-     * цілі числа, що означають, наприклад, кількість годин,
-     * що пройшли з початку відліку часу
-     * (наприклад з 1-го травня 2022 року 00:00),
-     * так число 36 буде означати 12:00 2-го травня 2022 року.
      */
-    private int time;
+    private LocalDateTime time;
     /**
      * Час початку виконання регулярної задачі.
-     * Для опису часу для початку будуть використовуватись
-     * цілі числа, що означають, наприклад, кількість годин,
-     * що пройшли з початку відліку часу
-     * (наприклад з 1-го травня 2022 року 00:00),
-     * так число 36 буде означати 12:00 2-го травня 2022 року.
      */
-    private int start;
+    private LocalDateTime start;
     /**
      * Час кінця виконання регулярної задачі.
-     * Для опису часу для початку будуть використовуватись
-     * цілі числа, що означають, наприклад, кількість годин,
-     * що пройшли з початку відліку часу
-     * (наприклад з 1-го травня 2022 року 00:00),
-     * так число 36 буде означати 12:00 2-го травня 2022 року.
      */
-    private int end;
+    private LocalDateTime end;
     /**
      * Інтервал виконання періодичної задачі.
      * Якщо задача запланована на регулярне виконання, то інтервал
@@ -75,11 +61,13 @@ public class Task implements Cloneable {
      * @param title - назва задачі;
      * @param time  - час, на який заплановане виконання задачі.
      */
-    public Task(String title, int time) {
+    public Task(String title, LocalDateTime time) {
         if (title == null) {
-            throw new NullPointerException("It doesn't make sense to create an untitled task!");
-        } else if (time < 0) {
-            throw new IllegalArgumentException("Time cannot be negative!");
+            throw new IllegalArgumentException("It doesn't make sense to create an untitled task!");
+        } else if (time == null){
+            throw new IllegalArgumentException("Time cannot be null!");
+        } else if (time.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Time cannot be earlier than current!");
         } else {
             this.title = title;
             this.time = time;
@@ -98,12 +86,14 @@ public class Task implements Cloneable {
      * @param end      - час кінця задачі;
      * @param interval - інтервал, з яким повторюється задача.
      */
-    public Task(String title, int start, int end, int interval) {
+    public Task(String title, LocalDateTime start, LocalDateTime end, int interval) {
         if (title == null) {
-            throw new NullPointerException("It doesn't make sense to create an untitled task!");
-        } else if (start < 0) {
-            throw new IllegalArgumentException("Time cannot be negative!");
-        } else if (end < start) {
+            throw new IllegalArgumentException("It doesn't make sense to create an untitled task!");
+        } else if (start == null || end == null) {
+            throw new IllegalArgumentException("Time cannot be null!");
+        } else if (start.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Time is in the past!");
+        } else if (end.isBefore(start)) {
             throw new IllegalArgumentException("End time must be longer than start time!");
         } else if (interval <= 0) {
             throw new IllegalArgumentException("The repetition interval of the task must be greater than zero!");
@@ -159,7 +149,7 @@ public class Task implements Cloneable {
      *         задачі. Якщо задача повторюється повертає час початку повторення
      *         задачі.
      */
-    public int getTime() {
+    public LocalDateTime getTime() {
         if (repeated) {
             return start;
         } else {
@@ -172,9 +162,9 @@ public class Task implements Cloneable {
      * 
      * @param time час початку виконання задачі.
      */
-    public void setTime(int time) {
-        if (time < 0) {
-            throw new IllegalArgumentException("Time cannot be negative!");
+    public void setTime(LocalDateTime time) {
+        if (time.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Time cannot be earlier than current!");
         } else {
             this.time = time;
             if (repeated) {
@@ -191,7 +181,7 @@ public class Task implements Cloneable {
      *         Якщо задача не повторюється, повертає
      *         час початку виконання задачі.
      */
-    public int getStartTime() {
+    public LocalDateTime getStartTime() {
         return repeated ? start : time;
     }
     /**
@@ -202,7 +192,7 @@ public class Task implements Cloneable {
      *         час закінчення виконання задачі. Якщо задача
      *         не повторюється, повертає час початку виконання задачі.
      */
-    public int getEndTime() {
+    public LocalDateTime getEndTime() {
         return repeated ? end : time;
     }
     /**
@@ -224,10 +214,10 @@ public class Task implements Cloneable {
      * @param end      - час закінчення виконання задачі.
      * @param interval - інтервал, з яким повторюється задача.
      */
-    public void setTime(int start, int end, int interval) {
-        if (start < 0) {
+    public void setTime(LocalDateTime start, LocalDateTime end, int interval) {
+        if (start.isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Time cannot be negative!");
-        } else if (end < start) {
+        } else if (end.isBefore(start)) {
             throw new IllegalArgumentException("End time must be longer than start time!");
         } else if (interval <= 0) {
             throw new IllegalArgumentException("The repetition interval of the task must be greater than zero!");
@@ -244,7 +234,7 @@ public class Task implements Cloneable {
      * @return - true - задача повторюється.
      */
     public boolean isRepeated() {
-        return repeated;
+        return this.repeated;
     }
     /**
      * Метод, що повертає час наступного виконання задачі
@@ -254,34 +244,28 @@ public class Task implements Cloneable {
      * @param current - вказаний поточний час.
      * @return - наступний час виконання задачі.
      */
-    public int nextTimeAfter(int current) {
-        if (current < 0) {
-            throw new IllegalArgumentException("Time should be positive");
+    public LocalDateTime nextTimeAfter(LocalDateTime current) {
+        if (current.isBefore(LocalDateTime.MIN)) {
+            throw new IllegalArgumentException("Time must be positive");
         }
         if (!active) {
-            return -1;
+            return null;
         }
         if (!repeated) {
-            return time > current ? time : -1;
+            return time.isAfter(current) ? time : null;
         }
-        if (current < start) {
+        if (current.isBefore(start)) {
             return start;
         }
-        if (current >= end) {
-            return -1;
-        } else {
-            int i;
-            for (i = start; i < end; i += interval) {
-                if (i > current) {
-                    break;
-                }
-            }
-            if (i < end) {
-                return i;
-            } else
-                return -1;
-
+        if (current.isAfter(end)) {
+            return null;
         }
+        for (LocalDateTime i = start; i.isBefore(end); i=i.plusHours(interval)) {
+            if (i.isAfter(current) && i.isBefore(end)){
+                return i;
+            }
+        }
+        return null;
     }
     public Task clone () throws CloneNotSupportedException {
         return (Task) super.clone();
@@ -318,7 +302,7 @@ public class Task implements Cloneable {
         int result = title == null ? 0 : title.hashCode();
         result += !active ? 0 : 1;
         result += !repeated ? 0 : 1;
-        result = 31 * result + time + start + end + interval;
+        result = 31 * result + time.hashCode() + start.hashCode() + end.hashCode() + interval;
         return result;
     }
 }

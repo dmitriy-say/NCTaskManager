@@ -1,5 +1,7 @@
 package ua.edu.sumdu.j2se.say.tasks;
 
+import java.time.LocalDateTime;
+
 import static ua.edu.sumdu.j2se.say.tasks.ListTypes.types.ARRAY;
 import static ua.edu.sumdu.j2se.say.tasks.ListTypes.types.LINKED;
 import static ua.edu.sumdu.j2se.say.tasks.TaskListFactory.createTaskList;
@@ -7,26 +9,26 @@ import static ua.edu.sumdu.j2se.say.tasks.TaskListFactory.createTaskList;
 public class Main {
 	public static void main(String[] args) throws CloneNotSupportedException {
 		System.out.println("Hello");
-		Task a = new Task("A",0);
-		Task b = new Task("B",10);
-		Task c = new Task("C",20);
-		Task d = new Task("D",50);
-		Task e = new Task("E",70);
-		Task f = new Task("F",90);
-		Task g = new Task("G",100);
-		Task h = new Task("H",110);
-		Task i = new Task("I",200);
-		Task j = new Task("J",500);
-		Task k = new Task("K",1000);
-		Task l = new Task("L", 0, 0,1);
-		Task m = new Task("M", 0, 1,1);
-		Task n = new Task("N", 0, 1,1);
-		Task o = new Task("O", 0, 0,1);
-		Task p = new Task("P", 0, 10,1);
-		Task q = new Task("Q", 0, 10,10);
-		Task r = new Task("R", 0, 10,1);
-		Task s = new Task("S", 0, 100,10);
-		Task t = new Task("T", 10, 1000,100);
+		Task a = new Task("A", LocalDateTime.now());
+		Task b = new Task("B", LocalDateTime.now().plusSeconds(1));
+		Task c = new Task("C", LocalDateTime.now().plusSeconds(10));
+		Task d = new Task("D", LocalDateTime.now().plusSeconds(3600));
+		Task e = new Task("E", LocalDateTime.now().plusSeconds(-1));
+		Task f = new Task("F", LocalDateTime.now().plusSeconds(3));
+		Task g = new Task("G", LocalDateTime.now().plusSeconds(5));
+		Task h = new Task("H", LocalDateTime.now().plusSeconds(3*3600));
+		Task i = new Task("I", LocalDateTime.now().plusSeconds(24*3*3600));
+		Task j = new Task("J", LocalDateTime.now().plusSeconds(24*7*3600));
+		Task k = new Task("K",LocalDateTime.now().plusSeconds(-1000));
+		Task l = new Task("L", LocalDateTime.now(), LocalDateTime.now().plusSeconds(1),1);
+		Task m = new Task("M", LocalDateTime.now().plusSeconds(1), LocalDateTime.now().plusSeconds(10),1);
+		Task n = new Task("N", LocalDateTime.now().plusSeconds(10), LocalDateTime.now().plusSeconds(1000),10);
+		Task o = new Task("O", LocalDateTime.now().plusSeconds(-1), LocalDateTime.now().plusSeconds(100),2);
+		Task p = new Task("P", LocalDateTime.now().plusSeconds(1000), LocalDateTime.now().plusSeconds(3*3600),60);
+		Task q = new Task("Q", LocalDateTime.now().plusSeconds(-1000), LocalDateTime.now().plusSeconds(1000),10);
+		Task r = new Task("R", LocalDateTime.now(), LocalDateTime.now().plusSeconds(10),1);
+		Task s = new Task("S", LocalDateTime.now().plusSeconds(1), LocalDateTime.now().plusSeconds(1000),10);
+		Task t = new Task("T", LocalDateTime.now().plusSeconds(1), LocalDateTime.now().plusSeconds(2),1);
 
 		a.setActive(true);
 		b.setActive(true);
@@ -50,8 +52,8 @@ public class Main {
 		t.setActive(true);
 
 		System.out.println("a: " + a);
-		System.out.println("a.nextTimeAfter(10): " + a.nextTimeAfter(10));
-		System.out.println("s.nextTimeAfter(10): " + s.nextTimeAfter(10));
+		System.out.println("a.nextTimeAfter(now): " + a.nextTimeAfter(LocalDateTime.now()));
+		System.out.println("s.nextTimeAfter(now+10): " + s.nextTimeAfter(LocalDateTime.now().plusSeconds(10)));
 
 		AbstractTaskList al = createTaskList(ARRAY);
 		AbstractTaskList ll = createTaskList(LINKED);
@@ -93,7 +95,7 @@ public class Main {
 		al.remove(i);
 
 		System.out.println("al: " + al);
-		System.out.println("al.incoming(10, 100)" + al.incoming(10, 100));
+		System.out.println("al.incoming(10, 100)" + Tasks.incoming(al, LocalDateTime.now(), LocalDateTime.now().plusSeconds(1)));
 		System.out.println("al size: " + al.size());
 		System.out.println("al length: " + al.thisArraySize());
 
@@ -120,7 +122,7 @@ public class Main {
 
 
 		System.out.println("ll: " + ll);
-		System.out.println("al.incoming(10, 100)" + al.incoming(10, 100));
+		System.out.println("ll.incoming(10, 100)" + Tasks.incoming(ll, LocalDateTime.now().plusSeconds(1), LocalDateTime.now().plusSeconds(10)));
 		System.out.println("ll.size: " + ll.size());
 
 
@@ -147,8 +149,7 @@ public class Main {
 		System.out.println(al.getClass());
 		System.out.println(ll.getClass());
 
-		System.out.println(al instanceof AbstractTaskList);
-		System.out.println(ll instanceof AbstractTaskList);
+
 
 		Object obj = new ArrayTaskList();
 
@@ -158,6 +159,11 @@ public class Main {
 	System.out.println(al1.equals(ll));
 	System.out.println(atl1.getClass());
 	System.out.println(obj.getClass());
+	System.out.println(LocalDateTime.now());
+
+	System.out.println(Tasks.calendar(al, LocalDateTime.now(), LocalDateTime.now().plusSeconds(1000000000)));
+	System.out.println(Tasks.calendar(ll, LocalDateTime.now(), LocalDateTime.now().plusSeconds(1000000000)));
+
 
 	}
 }

@@ -1,5 +1,6 @@
 package ua.edu.sumdu.j2se.say.tasks;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -36,31 +37,16 @@ public class Task implements Cloneable {
     private boolean repeated;
     /**
      * Час, на який заплановане виконання одноразової задачі.
-     * Для опису часу для початку будуть використовуватись
-     * цілі числа, що означають, наприклад, кількість годин,
-     * що пройшли з початку відліку часу
-     * (наприклад з 1-го травня 2022 року 00:00),
-     * так число 36 буде означати 12:00 2-го травня 2022 року.
      */
-    private int time;
+    private LocalDateTime time;
     /**
      * Час початку виконання регулярної задачі.
-     * Для опису часу для початку будуть використовуватись
-     * цілі числа, що означають, наприклад, кількість годин,
-     * що пройшли з початку відліку часу
-     * (наприклад з 1-го травня 2022 року 00:00),
-     * так число 36 буде означати 12:00 2-го травня 2022 року.
      */
-    private int start;
+    private LocalDateTime start;
     /**
      * Час кінця виконання регулярної задачі.
-     * Для опису часу для початку будуть використовуватись
-     * цілі числа, що означають, наприклад, кількість годин,
-     * що пройшли з початку відліку часу
-     * (наприклад з 1-го травня 2022 року 00:00),
-     * так число 36 буде означати 12:00 2-го травня 2022 року.
      */
-    private int end;
+    private LocalDateTime end;
     /**
      * Інтервал виконання періодичної задачі.
      * Якщо задача запланована на регулярне виконання, то інтервал
@@ -75,18 +61,24 @@ public class Task implements Cloneable {
      * @param title - назва задачі;
      * @param time  - час, на який заплановане виконання задачі.
      */
-    public Task(String title, int time) {
+    public Task(String title, LocalDateTime time) {
         if (title == null) {
-            throw new NullPointerException("It doesn't make sense to create an untitled task!");
-        } else if (time < 0) {
-            throw new IllegalArgumentException("Time cannot be negative!");
-        } else {
-            this.title = title;
-            this.time = time;
-            this.active = false;
-            this.repeated = false;
+            throw new IllegalArgumentException("It doesn't make sense to create an untitled task!");
         }
-    }
+        if (time == null) {
+            throw new IllegalArgumentException("Time is null!!!");
+        }
+        if (time.isBefore(LocalDateTime.MIN)) {
+            throw new IllegalArgumentException("Time is too far in the past!!!");
+        }
+        if (time.isAfter(LocalDateTime.MAX)) {
+        throw new IllegalArgumentException("Time is too far in the future!!!");
+        }
+        this.title = title;
+        this.time = time;
+        this.active = false;
+        this.repeated = false;
+        }
     /**
      * Конструктор, що конструює неактивну задачу,
      * яка виконується у заданому проміжку часу
@@ -98,27 +90,40 @@ public class Task implements Cloneable {
      * @param end      - час кінця задачі;
      * @param interval - інтервал, з яким повторюється задача.
      */
-    public Task(String title, int start, int end, int interval) {
+    public Task(String title, LocalDateTime start, LocalDateTime end, int interval) {
         if (title == null) {
-            throw new NullPointerException("It doesn't make sense to create an untitled task!");
-        } else if (start < 0) {
-            throw new IllegalArgumentException("Time cannot be negative!");
-        } else if (end < start) {
-            throw new IllegalArgumentException("End time must be longer than start time!");
-        } else if (interval <= 0) {
-            throw new IllegalArgumentException("The repetition interval of the task must be greater than zero!");
-        } else {
-            this.title = title;
-            this.start = start;
-            this.end = end;
-            this.interval = interval;
-            this.active = false;
-            this.repeated = true;
+            throw new IllegalArgumentException("It doesn't make sense to create an untitled task!");
         }
+        if (start == null) {
+            throw new IllegalArgumentException("Start is null!!!");
+        }
+        if (start.isBefore(LocalDateTime.MIN)) {
+            throw new IllegalArgumentException("Start is too far in the past!!!");
+        }
+        if (start.isAfter(LocalDateTime.MAX)) {
+            throw new IllegalArgumentException("Start is too far in the future!!!");
+        }
+        if (end == null) {
+            throw new IllegalArgumentException("End is null!!!");
+        }
+        if (!end.isAfter(start)) {
+            throw new IllegalArgumentException("End must be after start!!!");
+        }
+        if (end.isAfter(LocalDateTime.MAX)) {
+            throw new IllegalArgumentException("End is too far in the future!!!");
+        }
+        if (interval <= 0) {
+            throw new IllegalArgumentException("The repetition interval of the task must be greater than zero!");
+        }
+        this.title = title;
+        this.start = start;
+        this.end = end;
+        this.interval = interval;
+        this.active = false;
+        this.repeated = true;
     }
     /**
      * Метод для зчитування назви задачі.
-     * 
      * @return - title (назву задачі).
      */
     public String getTitle() {
@@ -131,10 +136,10 @@ public class Task implements Cloneable {
      */
     public void setTitle(String title) {
         if (title == null) {
-            throw new NullPointerException("It doesn't make sense to create an untitled task!");
-        } else {
-            this.title = title;
+            throw new IllegalArgumentException("It doesn't make sense to create an untitled task!");
         }
+        this.title = title;
+
     }
     /**
      * Метод для зчитування стану задачі.
@@ -159,7 +164,7 @@ public class Task implements Cloneable {
      *         задачі. Якщо задача повторюється повертає час початку повторення
      *         задачі.
      */
-    public int getTime() {
+    public LocalDateTime getTime() {
         if (repeated) {
             return start;
         } else {
@@ -172,16 +177,22 @@ public class Task implements Cloneable {
      * 
      * @param time час початку виконання задачі.
      */
-    public void setTime(int time) {
-        if (time < 0) {
-            throw new IllegalArgumentException("Time cannot be negative!");
-        } else {
-            this.time = time;
-            if (repeated) {
-                repeated = false;
-            }
+    public void setTime(LocalDateTime time) {
+        if (time == null){
+            throw new IllegalArgumentException("Time is null!!!");
         }
+        if (time.isBefore(LocalDateTime.MIN)) {
+            throw new IllegalArgumentException("Time is too far in the past!!!");
+        }
+        if (time.isAfter(LocalDateTime.MAX)) {
+            throw new IllegalArgumentException("Time is too far in the future!!!");
+        }
+        this.time = time;
+        if (repeated) {
+            repeated = false;
+            }
     }
+
     /**
      * Метод для зчитування часу початку виконання
      * для задач, що повторюються.
@@ -191,7 +202,7 @@ public class Task implements Cloneable {
      *         Якщо задача не повторюється, повертає
      *         час початку виконання задачі.
      */
-    public int getStartTime() {
+    public LocalDateTime getStartTime() {
         return repeated ? start : time;
     }
     /**
@@ -202,7 +213,7 @@ public class Task implements Cloneable {
      *         час закінчення виконання задачі. Якщо задача
      *         не повторюється, повертає час початку виконання задачі.
      */
-    public int getEndTime() {
+    public LocalDateTime getEndTime() {
         return repeated ? end : time;
     }
     /**
@@ -224,20 +235,34 @@ public class Task implements Cloneable {
      * @param end      - час закінчення виконання задачі.
      * @param interval - інтервал, з яким повторюється задача.
      */
-    public void setTime(int start, int end, int interval) {
-        if (start < 0) {
-            throw new IllegalArgumentException("Time cannot be negative!");
-        } else if (end < start) {
-            throw new IllegalArgumentException("End time must be longer than start time!");
-        } else if (interval <= 0) {
-            throw new IllegalArgumentException("The repetition interval of the task must be greater than zero!");
-        } else {
-            this.start = start;
-            this.end = end;
-            this.interval = interval;
-            repeated = true;
+    public void setTime(LocalDateTime start, LocalDateTime end, int interval) {
+        if (start == null){
+            throw new NullPointerException("Start is null!!!");
         }
+        if (start.isBefore(LocalDateTime.MIN)) {
+            throw new IllegalArgumentException("Start is too far in the past!!!");
+        }
+        if (start.isAfter(LocalDateTime.MAX)) {
+            throw new IllegalArgumentException("Start is too far in the future!!!");
+        }
+        if (end == null){
+            throw new NullPointerException("End is null!!!");
+        }
+        if (end.isBefore(start)) {
+            throw new IllegalArgumentException("End must be after start!!!");
+        }
+        if (end.isAfter(LocalDateTime.MAX)) {
+            throw new IllegalArgumentException("End is too far in the future!!!");
+        }
+        if (interval <= 0) {
+            throw new IllegalArgumentException("The repetition interval of the task must be greater than zero!!!");
+        }
+        this.start = start;
+        this.end = end;
+        this.interval = interval;
+        repeated = true;
     }
+
     /**
      * Метод для перевірки повторюваності задачі.
      * 
@@ -254,33 +279,42 @@ public class Task implements Cloneable {
      * @param current - вказаний поточний час.
      * @return - наступний час виконання задачі.
      */
-    public int nextTimeAfter(int current) {
-        if (current < 0) {
-            throw new IllegalArgumentException("Time should be positive");
+    public LocalDateTime nextTimeAfter(LocalDateTime current) {
+        if(current == null){
+            throw new IllegalArgumentException("Current should not be null!!!");
+        }
+        if (current.isBefore(LocalDateTime.MIN)) {
+            throw new IllegalArgumentException("Current is too far in the past!!!");
+        }
+        if (current.isAfter(LocalDateTime.MAX)) {
+            throw new IllegalArgumentException("Current is too far in the future!!!");
         }
         if (!active) {
-            return -1;
-        }
-        if (!repeated) {
-            return time > current ? time : -1;
-        }
-        if (current < start) {
-            return start;
-        }
-        if (current >= end) {
-            return -1;
+            return null;
         } else {
-            int i;
-            for (i = start; i < end; i += interval) {
-                if (i > current) {
-                    break;
+            if (!repeated) {
+                return time.isAfter(current) ? time : null;
+            } else {
+                if (current.isBefore(start)) {
+                    return start;
+                } else {
+                    if (!current.isBefore(end)) {
+                        return null;
+                    } else {
+                        LocalDateTime i;
+                        for (i = start; !i.isAfter(end); i=i.plusSeconds(interval)) {
+                            if (i.isAfter(current)){
+                                break;
+                            }
+                        }
+                        if(!i.isAfter(end)) {
+                            return i;
+                        } else {
+                            return null;
+                        }
+                    }
                 }
             }
-            if (i < end) {
-                return i;
-            } else
-                return -1;
-
         }
     }
     public Task clone () throws CloneNotSupportedException {
@@ -302,23 +336,36 @@ public class Task implements Cloneable {
         if (other == this) {
             return true;
         }
-        if (other == null || getClass() != other.getClass()) {
+        if (other == null) {
             return false;
         }
-        return Objects.equals(title, ((Task) other).title)
-                && active == ((Task) other).active
-                && repeated == ((Task) other).repeated
-                && time == ((Task) other).time
-                && start == ((Task) other).start
-                && end == ((Task) other).end
-                && interval == ((Task) other).interval;
+        if (getClass() != other.getClass()){
+            return false;
+        }
+        if (!isRepeated()){
+            return Objects.equals(title, ((Task) other).title)
+                    && active == ((Task) other).active
+                    && repeated == ((Task) other).repeated
+                    && time.equals(((Task) other).time);
+        } else {
+            return Objects.equals(title, ((Task) other).title)
+                    && active == ((Task) other).active
+                    && repeated == ((Task) other).repeated
+                    && start.equals(((Task) other).start)
+                    && end.equals(((Task) other).end)
+                    && interval == ((Task) other).interval;
+        }
     }
     @Override
     public int hashCode() {
         int result = title == null ? 0 : title.hashCode();
         result += !active ? 0 : 1;
         result += !repeated ? 0 : 1;
-        result = 31 * result + time + start + end + interval;
+        result = 31 * result
+                + (time == null? 0 : time.hashCode())
+                + (start == null? 0:start.hashCode())
+                + (end == null ? 0 : end.hashCode())
+                + interval;
         return result;
     }
 }

@@ -97,6 +97,7 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
         return Arrays.stream(taskList, 0, size);
     }
 
+
     public Task set(int index, Task task) {
         checkPositionIndex(index);
         Task oldValue = taskList[index];

@@ -1,5 +1,7 @@
 package ua.edu.sumdu.j2se.say.tasks;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 import static ua.edu.sumdu.j2se.say.tasks.ListTypes.types.ARRAY;
@@ -7,7 +9,7 @@ import static ua.edu.sumdu.j2se.say.tasks.ListTypes.types.LINKED;
 import static ua.edu.sumdu.j2se.say.tasks.TaskListFactory.createTaskList;
 
 public class Main {
-	public static void main(String[] args) throws CloneNotSupportedException {
+	public static void main(String[] args) throws CloneNotSupportedException, IOException {
 		System.out.println("Hello");
 		Task a = new Task("A", LocalDateTime.now());
 		Task b = new Task("B", LocalDateTime.now().plusSeconds(1));
@@ -163,6 +165,14 @@ public class Main {
 
 	System.out.println(Tasks.calendar(al, LocalDateTime.now(), LocalDateTime.now().plusSeconds(1000000000)));
 	System.out.println(Tasks.calendar(ll, LocalDateTime.now(), LocalDateTime.now().plusSeconds(1000000000)));
+
+		File file = new File("writeBinaryFile");
+		TaskIO.writeText(ll, file);
+		AbstractTaskList readFromFile = new ArrayTaskList();
+		TaskIO.readText(readFromFile, file);
+		System.out.println(readFromFile);
+		System.out.println(readFromFile.getTask(0).toString());
+		System.out.println(readFromFile.getTask(10).toString());
 
 
 	}

@@ -1,5 +1,6 @@
 package ua.edu.sumdu.j2se.say.tasks;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -10,7 +11,7 @@ import java.util.Objects;
  * @author Say Dmytro.
  * @version 1.0.
  */
-public class Task implements Cloneable {
+public class Task implements Cloneable, Serializable {
     /**
      * Назва задачі.
      * Містить деякий текст, який описує деталі задачі,

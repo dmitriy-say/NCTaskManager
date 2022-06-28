@@ -1,10 +1,13 @@
 package ua.edu.sumdu.j2se.say.tasks;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 
-public abstract class AbstractTaskList extends TaskListFactory implements Iterable<Task>, Cloneable {
+public abstract class AbstractTaskList
+        extends TaskListFactory
+        implements Iterable<Task>, Cloneable, Serializable {
     /**
      * Type of the list to create.
      */

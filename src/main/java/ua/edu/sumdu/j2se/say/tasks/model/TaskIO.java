@@ -1,4 +1,4 @@
-package ua.edu.sumdu.j2se.say.tasks;
+package ua.edu.sumdu.j2se.say.tasks.model;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;

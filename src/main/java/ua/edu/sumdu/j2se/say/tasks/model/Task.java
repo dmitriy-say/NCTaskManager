@@ -1,4 +1,4 @@
-package ua.edu.sumdu.j2se.say.tasks;
+package ua.edu.sumdu.j2se.say.tasks.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -77,7 +77,7 @@ public class Task implements Cloneable, Serializable {
         }
         this.title = title;
         this.time = time;
-        this.active = false;
+        this.active = true;
         this.repeated = false;
         }
     /**
@@ -120,7 +120,7 @@ public class Task implements Cloneable, Serializable {
         this.start = start;
         this.end = end;
         this.interval = interval;
-        this.active = false;
+        this.active = true;
         this.repeated = true;
     }
     /**

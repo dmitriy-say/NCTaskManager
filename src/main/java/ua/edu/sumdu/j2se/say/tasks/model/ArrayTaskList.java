@@ -1,10 +1,10 @@
-package ua.edu.sumdu.j2se.say.tasks;
+package ua.edu.sumdu.j2se.say.tasks.model;
 
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static ua.edu.sumdu.j2se.say.tasks.ListTypes.types.ARRAY;
+import static ua.edu.sumdu.j2se.say.tasks.model.ListTypes.types.ARRAY;
 
 public class ArrayTaskList extends AbstractTaskList implements Cloneable {
     /**

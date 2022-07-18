@@ -14,7 +14,7 @@ public abstract class AbstractTaskList
     /**
      * Number of tasks in the list.
      */
-    protected transient int size;
+    protected int size;
     protected transient int modCount = 0;
     /**
      * Adds the task to the list.
@@ -53,10 +53,26 @@ public abstract class AbstractTaskList
         return (AbstractTaskList) super.clone();
     }
     public String toString() {
-        return "AbstractTaskList{"
-                + "type=" + type
-                + ", size=" + size
-                + '}';
+        Iterator<Task> it = iterator();
+        StringBuilder returnStr = new StringBuilder();
+        int objNum = 1;
+
+//        if(type == ListTypes.types.ARRAY) {
+//            returnStr.append("ArrayTaskList; ");
+//        } else {
+//            returnStr.append("LinkedTaskList; ");
+//        }
+//        returnStr.append("size=").append(size).append(";");
+
+        while(it.hasNext()) {
+            returnStr.append("Task #");
+            returnStr.append(objNum);
+            returnStr.append("---");
+            returnStr.append(it.next().toString());
+            returnStr.append("\n");
+            objNum++;
+        }
+        return new String(returnStr);
     }
 
     // -----------------------Iterators---------------------------------

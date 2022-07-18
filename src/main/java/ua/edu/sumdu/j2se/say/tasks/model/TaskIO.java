@@ -24,15 +24,15 @@ public class TaskIO {
      */
     public static void write(AbstractTaskList tasks, OutputStream out) {
             try(DataOutputStream dataOutputStream = new DataOutputStream(out)) {
-                dataOutputStream.writeInt(tasks.size());
                 tasks.getStream().filter(Objects::nonNull).forEach(task -> {
                     try{
-                    String title = task.getTitle();
-                    dataOutputStream.writeInt(title.length());
-                    dataOutputStream.writeUTF(title);
-                    dataOutputStream.writeBoolean(task.isActive());
-                    dataOutputStream.writeInt(task.getRepeatInterval());
-                    if (task.isRepeated()) {
+                        dataOutputStream.writeInt(tasks.size());
+                        String title = task.getTitle();
+                        dataOutputStream.writeUTF(title);
+                        dataOutputStream.writeBoolean(task.isActive());
+                        dataOutputStream.writeBoolean(task.isRepeated());
+                        if (task.isRepeated()) {
+                        dataOutputStream.writeInt(task.getRepeatInterval());
                         dataOutputStream.writeLong(task.getStartTime().atZone(ZoneId.systemDefault())
                                 .toInstant().toEpochMilli());
                         dataOutputStream.writeLong(task.getEndTime().atZone(ZoneId.systemDefault())
@@ -62,11 +62,12 @@ public class TaskIO {
                 int taskCount = dataInputStream.readInt();
                 for (int i = 0; i < taskCount; i++) {
                     Task task;
-                    int titleLength = dataInputStream.readInt();
                     String title = dataInputStream.readUTF();
                     boolean isActive = dataInputStream.readBoolean();
-                    int interval = dataInputStream.readInt();
-                    if (interval > 0) {
+                    boolean isRepeated = dataInputStream.readBoolean();
+
+                    if (isRepeated) {
+                        int interval = dataInputStream.readInt();
                         LocalDateTime startTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(dataInputStream.readLong()),
                                 TimeZone.getDefault().toZoneId());
                         LocalDateTime endTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(dataInputStream.readLong()),

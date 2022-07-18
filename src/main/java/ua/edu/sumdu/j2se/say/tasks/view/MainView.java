@@ -7,7 +7,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class MainView implements View {
+    public final AbstractTaskList taskList;
 
+    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+    public MainView(AbstractTaskList taskList) {
+        this.taskList = taskList;
+    }
 
 
     @Override
@@ -19,11 +25,16 @@ public class MainView implements View {
         System.out.println("4 - View calendar.");
         System.out.println("5 - Exit.");
         int choice = 0;
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+        try {
             choice = Integer.parseInt(reader.readLine());
         } catch (IOException e) {
             e.printStackTrace();
         }
+    if (choice == 1 | choice == 2 | choice == 3 | choice == 4 | choice == 5) {
         return choice;
+    } else {
+        System.out.println("Type 1, 2, 3, 4 or 5 and press Enter!");
+        return 0;
+    }
     }
 }

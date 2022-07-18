@@ -323,7 +323,7 @@ public class Task implements Cloneable, Serializable {
     }
     @Override
     public String toString() {
-        return "Task{" +
+        return "{" +
                 "title='" + title + '\'' +
                 ", active=" + active +
                 ", repeated=" + repeated +

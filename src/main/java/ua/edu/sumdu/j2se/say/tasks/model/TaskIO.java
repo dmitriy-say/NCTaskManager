@@ -1,14 +1,13 @@
 package ua.edu.sumdu.j2se.say.tasks.model;
 
+
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.*;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Objects;
-import java.util.TimeZone;
+import java.time.ZoneOffset;
+
 
 /**
  * Class TaskIO.
@@ -17,102 +16,75 @@ import java.util.TimeZone;
  */
 public class TaskIO {
 
-    /**
-     * Writes tasks from the list to the stream in the binary format described below.
-     * @param tasks data to write
-     * @param out stream to record
-     */
     public static void write(AbstractTaskList tasks, OutputStream out) {
-            try(DataOutputStream dataOutputStream = new DataOutputStream(out)) {
-                tasks.getStream().filter(Objects::nonNull).forEach(task -> {
-                    try{
-                        dataOutputStream.writeInt(tasks.size());
-                        String title = task.getTitle();
-                        dataOutputStream.writeUTF(title);
-                        dataOutputStream.writeBoolean(task.isActive());
-                        dataOutputStream.writeBoolean(task.isRepeated());
-                        if (task.isRepeated()) {
-                        dataOutputStream.writeInt(task.getRepeatInterval());
-                        dataOutputStream.writeLong(task.getStartTime().atZone(ZoneId.systemDefault())
-                                .toInstant().toEpochMilli());
-                        dataOutputStream.writeLong(task.getEndTime().atZone(ZoneId.systemDefault())
-                                .toInstant().toEpochMilli());
-                    } else {
-                        dataOutputStream.writeLong(task.getTime().atZone(ZoneId.systemDefault())
-                                .toInstant().toEpochMilli());
-                    }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-            dataOutputStream.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-    }
-
-    /**
-     * Reads tasks from the stream to this task list.
-     * @param tasks what
-     * @param in where to
-
-     */
-    public static void read(AbstractTaskList tasks, InputStream in) {
-            try(DataInputStream dataInputStream = new DataInputStream(in)) {
-                int taskCount = dataInputStream.readInt();
-                for (int i = 0; i < taskCount; i++) {
-                    Task task;
-                    String title = dataInputStream.readUTF();
-                    boolean isActive = dataInputStream.readBoolean();
-                    boolean isRepeated = dataInputStream.readBoolean();
-
-                    if (isRepeated) {
-                        int interval = dataInputStream.readInt();
-                        LocalDateTime startTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(dataInputStream.readLong()),
-                                TimeZone.getDefault().toZoneId());
-                        LocalDateTime endTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(dataInputStream.readLong()),
-                                TimeZone.getDefault().toZoneId());
-                        task = new Task(title, startTime, endTime, interval);
-                        task.setActive(isActive);
-                    } else {
-                        LocalDateTime time = LocalDateTime.ofInstant(Instant.ofEpochMilli(dataInputStream.readLong()),
-                                TimeZone.getDefault().toZoneId());
-                        task = new Task(title, time);
-                        task.setActive(isActive);
-                    }
-                    tasks.add(task);
+        try (DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(out))) {
+            dos.writeInt(tasks.size());
+            for (Task t : tasks) {
+                dos.writeInt(t.getTitle().length());
+                dos.writeUTF(t.getTitle());
+                if (t.isActive()) {
+                    dos.writeInt(1);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+                else {
+                    dos.writeInt(0);
+                }
+                dos.writeInt(t.getRepeatInterval());
+                if (t.isRepeated()) {
+                    dos.writeLong(t.getStartTime().toEpochSecond(ZoneOffset.UTC));
+                    dos.writeLong(t.getEndTime().toEpochSecond(ZoneOffset.UTC));
+                }
+                else {
+                    dos.writeLong(t.getTime().toEpochSecond(ZoneOffset.UTC));
+                }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    /**
-     * writes tasks from the list to a file.
-     * @param tasks what
-     * @param file where to
-     */
+    public static void read(AbstractTaskList tasks, InputStream in) {
+        try (DataInputStream dis = new DataInputStream(new BufferedInputStream(in))) {
+            int size = dis.readInt();
+            for (int i = 0; i < size; i++) {
+                int titleLength = dis.readInt();
+                String title = dis.readUTF();
+                boolean active = (dis.readInt() == 1);
+                int interval = dis.readInt();
+
+                Task task;
+                if (interval > 0) {
+                    task = new Task(title,
+                            LocalDateTime.ofEpochSecond(dis.readLong(), 0, ZoneOffset.UTC),
+                            LocalDateTime.ofEpochSecond(dis.readLong(), 0, ZoneOffset.UTC),
+                            interval);
+                } else {
+                    task = new Task(title,
+                            LocalDateTime.ofEpochSecond(dis.readLong(), 0, ZoneOffset.UTC));
+                }
+                task.setActive(active);
+                tasks.add(task);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void writeBinary(AbstractTaskList tasks, File file) {
-        try(FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-            write(tasks, fileOutputStream);
-            fileOutputStream.flush();
+        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
+            write(tasks, bos);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * reads tasks from the file to the task list.
-     * @param tasks what
-     * @param file from where
-     */
     public static void readBinary(AbstractTaskList tasks, File file) {
-        try(FileInputStream fileInputStream = new FileInputStream(file)) {
-            read(tasks, fileInputStream);
+        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
+            read(tasks, bis);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     public static void write(AbstractTaskList tasks, Writer out) {
         try(JsonWriter jsonWriter = new JsonWriter(out)) {

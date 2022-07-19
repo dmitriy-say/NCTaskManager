@@ -84,8 +84,8 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
      * @param index - місце задачі у списку.
      * @return taskList[i].
      */
-    public Task getTask(final int index) {
-        if (index < 0 || index > size - 1) {
+    public Task getTask(int index) {
+        if (index < 0 || index > this.size() - 1) {
             throw new IndexOutOfBoundsException(
                     "The index is outside the array");
         }

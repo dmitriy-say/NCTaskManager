@@ -17,25 +17,22 @@ public class MainController extends Controller {
         this.taskList = taskList;
 
         controllers.add(this);
-        controllers.add(new ViewAllTasksController(new AllTasksView(), Controller.VIEW_ALL_TASKS_ACTION));
-        controllers.add(new AddTaskController(new AddTaskView(taskList), Controller.ADD_TASK_ACTION));
-        controllers.add(new RemoveTaskController(new RemoveTaskView(), Controller.REMOVE_TASK_ACTION));
+        controllers.add(new AllTasksController(new AllTasksView()));
+        controllers.add(new AddTaskController(new AddTaskView(taskList)));
+        controllers.add(new RemoveTaskController(new RemoveTaskView(taskList)));
         controllers.add(new CalendarController(new CalendarView(), Controller.CALENDAR_ACTION));
     }
 
     @Override
     public int execute(AbstractTaskList taskList) {
         int action = view.printInfo(taskList);
-        for (;;){
+        do {
             for (Controller controller : controllers) {
                 if (controller.canToExecute(action)) {
                     action = controller.execute(this.taskList);
                 }
             }
-            if (action == FINISH_ACTION) {
-                break;
-            }
-        }
+        } while (action != FINISH_ACTION);
 
         return FINISH_ACTION;
     }

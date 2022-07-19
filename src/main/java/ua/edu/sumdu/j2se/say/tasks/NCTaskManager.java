@@ -36,6 +36,8 @@ public class NCTaskManager {
         AbstractTaskList taskList = TaskListFactory.createTaskList(ListTypes.types.ARRAY);
         if (tasksFile.length()!=0) {
             TaskIO.readBinary(taskList, tasksFile);
+        } else {
+            System.out.println("tasksFile is empty!");
         }
         View mainView = new MainView(taskList);
         Controller mainController = new MainController(taskList, mainView);

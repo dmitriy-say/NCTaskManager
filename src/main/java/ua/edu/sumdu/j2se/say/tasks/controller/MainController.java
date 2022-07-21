@@ -20,7 +20,12 @@ public class MainController extends Controller {
         controllers.add(new AllTasksController(new AllTasksView()));
         controllers.add(new AddTaskController(new AddTaskView(taskList)));
         controllers.add(new RemoveTaskController(new RemoveTaskView(taskList)));
+        controllers.add(new ChangeTaskController(new ChangeTaskView(taskList)));
         controllers.add(new CalendarController(new CalendarView(), Controller.CALENDAR_ACTION));
+
+        Notificator notificator = new Notificator(taskList);
+        notificator.setDaemon(true);
+        notificator.start();
     }
 
     @Override

@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import ua.edu.sumdu.j2se.say.tasks.controller.Controller;
 import ua.edu.sumdu.j2se.say.tasks.controller.MainController;
+import ua.edu.sumdu.j2se.say.tasks.controller.Notificator;
 import ua.edu.sumdu.j2se.say.tasks.model.*;
 import ua.edu.sumdu.j2se.say.tasks.view.MainView;
 import ua.edu.sumdu.j2se.say.tasks.view.View;
@@ -17,7 +18,7 @@ public class NCTaskManager {
     public static File tasksFile, textFile;
 
     public NCTaskManager() {
-        tasksFile=new File("SavedTasks.dat");
+        tasksFile = new File("SavedTasks.dat");
         textFile = new File("SavedText.dat");
     }
 
@@ -36,11 +37,14 @@ public class NCTaskManager {
         AbstractTaskList taskList = TaskListFactory.createTaskList(ListTypes.types.ARRAY);
         if (tasksFile.length()!=0) {
             TaskIO.readBinary(taskList, tasksFile);
+        } else if (textFile.length()!=0) {
+            TaskIO.readText(taskList, textFile);
         } else {
             System.out.println("tasksFile is empty!");
         }
         View mainView = new MainView(taskList);
         Controller mainController = new MainController(taskList, mainView);
+
         mainController.execute(taskList);
 
         System.out.println("Task Manager was closed.");

@@ -34,7 +34,7 @@ public class TaskIO {
                     dos.writeLong(t.getEndTime().toEpochSecond(ZoneOffset.UTC));
                 }
                 else {
-                    dos.writeLong(t.getTime().toEpochSecond(ZoneOffset.UTC));
+                    dos.writeLong(t.getStartTime().toEpochSecond(ZoneOffset.UTC));
                 }
             }
         } catch (IOException e) {
@@ -70,16 +70,16 @@ public class TaskIO {
     }
 
     public static void writeBinary(AbstractTaskList tasks, File file) {
-        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
-            write(tasks, bos);
+        try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+            write(tasks, bufferedOutputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void readBinary(AbstractTaskList tasks, File file) {
-        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
-            read(tasks, bis);
+        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file))) {
+            read(tasks, bufferedInputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,7 +101,7 @@ public class TaskIO {
                     jsonWriter.name("Interval").value(task.getRepeatInterval());
                 } else {
 
-                    jsonWriter.name("Time").value(task.getTime().toString());
+                    jsonWriter.name("Time").value(task.getStartTime().toString());
                 }
                 jsonWriter.endObject();
             } catch (IOException e) {
@@ -123,7 +123,7 @@ public class TaskIO {
     public static void read(AbstractTaskList tasks, Reader in) {
         try (JsonReader jsonReader = new JsonReader(in)) {
             String title = null;
-            Task taskAux;
+            Task taskToRead;
             String startString, endString, timeString;
             LocalDateTime start = null, end = null, time = null;
             int interval = 0;
@@ -156,12 +156,12 @@ public class TaskIO {
                 }
 
                 if (repeated) {
-                    taskAux = new Task(title, start, end, interval);
+                    taskToRead = new Task(title, start, end, interval);
                 } else {
-                    taskAux = new Task(title, time);
+                    taskToRead = new Task(title, time);
                 }
-                taskAux.setActive(active);
-                tasks.add(taskAux);
+                taskToRead.setActive(active);
+                tasks.add(taskToRead);
                 jsonReader.endObject();
             }
             jsonReader.endArray();

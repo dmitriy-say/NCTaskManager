@@ -2,6 +2,7 @@ package ua.edu.sumdu.j2se.say.tasks.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
@@ -130,6 +131,55 @@ public class Task implements Cloneable, Serializable {
     public String getTitle() {
         return title;
     }
+
+    /**
+     * Метод для зчитування часу початку виконання
+     * для задач.
+     *
+     * @return час початку виконання задачі.
+     */
+    public LocalDateTime getStartTime() {
+        return repeated ? start : time;
+    }
+    /**
+     * Метод для зчитування часу закінчення виконання
+     * для задач, що повторюються.
+     *
+     * @return - якщо задача повторюється, повертає
+     *         час закінчення виконання задачі. Якщо задача
+     *         не повторюється, повертає час початку виконання задачі.
+     */
+    public LocalDateTime getEndTime() {
+        return repeated ? end : time;
+    }
+    /**
+     * Метод для зчитування інтервалу для задач, що повторюються.
+     *
+     * @return - якщо задача повторюється повертає інтервал,
+     *         якщо задача не повторюється, повертає 0.
+     */
+    public int getRepeatInterval() {
+        return repeated ? interval : 0;
+    }
+
+    /**
+     * Метод для зчитування стану задачі.
+     *
+     * @return - active (стан задачі: true - активна, false - неактивна).
+     */
+    public boolean isActive() {
+        return active;
+    }
+
+    /**
+     * Метод для перевірки повторюваності задачі.
+     *
+     * @return - true - задача повторюється.
+     */
+    public boolean isRepeated() {
+        return repeated;
+    }
+
     /**
      * Метод для встановлення назви задачі.
      * 
@@ -140,42 +190,11 @@ public class Task implements Cloneable, Serializable {
             throw new IllegalArgumentException("It doesn't make sense to create an untitled task!");
         }
         this.title = title;
-
-    }
-    /**
-     * Метод для зчитування стану задачі.
-     * 
-     * @return - active (стан задачі: true - активна, false - неактивна).
-     */
-    public boolean isActive() {
-        return active;
-    }
-    /**
-     * Метод для встановлення стану задачі.
-     * 
-     * @param active - (стан задачі: true - активна, false - неактивна).
-     */
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-    /**
-     * Метод для зчитування часу виконання для задач, що не повторюються.
-     * 
-     * @return якщо задача не повторюється повертає час початку виконання
-     *         задачі. Якщо задача повторюється повертає час початку повторення
-     *         задачі.
-     */
-    public LocalDateTime getTime() {
-        if (repeated) {
-            return start;
-        } else {
-            return time;
-        }
     }
     /**
      * Метод для зміни часу виконання для задач, що не повторюються.
      * У разі, якщо задача повторювалась, вона стає такою, що не повторюється.
-     * 
+     *
      * @param time час початку виконання задачі.
      */
     public void setTime(LocalDateTime time) {
@@ -191,47 +210,14 @@ public class Task implements Cloneable, Serializable {
         this.time = time;
         if (repeated) {
             repeated = false;
-            }
-    }
-
-    /**
-     * Метод для зчитування часу початку виконання
-     * для задач, що повторюються.
-     * 
-     * @return - якщо задача повторюється,
-     *         повертає час початку повторення задачі.
-     *         Якщо задача не повторюється, повертає
-     *         час початку виконання задачі.
-     */
-    public LocalDateTime getStartTime() {
-        return repeated ? start : time;
-    }
-    /**
-     * Метод для зчитування часу закінчення виконання
-     * для задач, що повторюються.
-     * 
-     * @return - якщо задача повторюється, повертає
-     *         час закінчення виконання задачі. Якщо задача
-     *         не повторюється, повертає час початку виконання задачі.
-     */
-    public LocalDateTime getEndTime() {
-        return repeated ? end : time;
-    }
-    /**
-     * Метод для зчитування інтервалу для задач, що повторюються.
-     * 
-     * @return - якщо задача повторюється повертає інтервал,
-     *         якщо задача не повторюється, повертає 0.
-     */
-    public int getRepeatInterval() {
-        return repeated ? interval : 0;
+        }
     }
     /**
      * Метод для зміни часу початку, часу закінчення та інтервалу для
      * задач, що повторюються. У разі, якщо задача не повторювалася, то
      * при встановленні часу її початку, закінчення та інтервалу задача
      * стає такою, що повторюється.
-     * 
+     *
      * @param start    - час початку виконання задачі.
      * @param end      - час закінчення виконання задачі.
      * @param interval - інтервал, з яким повторюється задача.
@@ -263,15 +249,37 @@ public class Task implements Cloneable, Serializable {
         this.interval = interval;
         repeated = true;
     }
+    public void setStart(LocalDateTime start) {
+        this.start = start;
+    }
+
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
+
+
+
 
     /**
-     * Метод для перевірки повторюваності задачі.
+     * Метод для встановлення стану задачі.
      * 
-     * @return - true - задача повторюється.
+     * @param active - (стан задачі: true - активна, false - неактивна).
      */
-    public boolean isRepeated() {
-        return repeated;
+    public void setActive(boolean active) {
+        this.active = active;
     }
+
+
+
+
+
+
+
+
     /**
      * Метод, що повертає час наступного виконання задачі
      * після вказаного часу current. Якщо після вказаного часу
@@ -323,15 +331,21 @@ public class Task implements Cloneable, Serializable {
     }
     @Override
     public String toString() {
-        return "{" +
-                "title='" + title + '\'' +
-                ", active=" + active +
-                ", repeated=" + repeated +
-                ", time=" + time +
-                ", start=" + start +
-                ", end=" + end +
-                ", interval=" + interval +
-                '}';
+        if (repeated) {
+            return "{" +
+                    "title='" + title + '\'' +
+                    ", start=" + start.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")) +
+                    ", end=" + end.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")) +
+                    ", interval=" + interval/3600 + " hours" +
+                    ", active=" + active +
+                    '}';
+        } else {
+            return "{" +
+                    "title='" + title + '\'' +
+                    ", time=" + time.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")) +
+                    ", active=" + active +
+                    '}';
+        }
     }
     public boolean equals(Object other) {
         if (other == this) {

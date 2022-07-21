@@ -58,7 +58,7 @@ public class ArrayTaskList extends AbstractTaskList implements Cloneable {
      * @param task - task to remove.
      * @return - if such a task is in the list - true, if not - false.
      */
-    public boolean remove(final Task task) {
+    public boolean remove(Task task) {
         for (int i = 0; i < size; i++) {
             if (taskList[i].equals(task)) {
                 System.arraycopy(taskList,

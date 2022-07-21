@@ -45,7 +45,7 @@ public class LinkedTaskList extends AbstractTaskList implements Cloneable {
         }
         return false;
     }
-    public Task getTask(final int index) {
+    public Task getTask(int index) {
         checkElementIndex(index);
         return node(index).task;
     }

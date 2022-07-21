@@ -9,8 +9,9 @@ public abstract class Controller {
     public static final int VIEW_ALL_TASKS_ACTION = 1;
     public static final int ADD_TASK_ACTION = 2;
     public static final int REMOVE_TASK_ACTION = 3;
-    public static final int CALENDAR_ACTION = 4;
-    public static final int FINISH_ACTION = 5;
+    public static final int CHANGE_TASK_ACTION = 4;
+    public static final int CALENDAR_ACTION = 5;
+    public static final int FINISH_ACTION = 6;
 
     protected View view;
     protected int actionToExecute = 0;

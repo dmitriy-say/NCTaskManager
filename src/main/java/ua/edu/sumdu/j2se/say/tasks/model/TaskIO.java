@@ -3,6 +3,8 @@ package ua.edu.sumdu.j2se.say.tasks.model;
 
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -15,6 +17,7 @@ import java.time.ZoneOffset;
  * @author Dmytro Say
  */
 public class TaskIO {
+    private static final Logger log = LogManager.getLogger(TaskIO.class);
 
     public static void write(AbstractTaskList tasks, OutputStream out) {
         try (DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(out))) {
@@ -81,6 +84,7 @@ public class TaskIO {
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file))) {
             read(tasks, bufferedInputStream);
         } catch (IOException e) {
+
             e.printStackTrace();
         }
     }

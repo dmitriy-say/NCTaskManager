@@ -18,7 +18,9 @@ public class NCTaskManager {
     public static File tasksFile, textFile;
 
     public NCTaskManager() {
+        log.info("NCTaskManager constructor takes SavedTasks.dat file.");
         tasksFile = new File("SavedTasks.dat");
+        log.info("NCTaskManager constructor takes SavedText.dat file.");
         textFile = new File("SavedText.dat");
     }
 
@@ -32,8 +34,6 @@ public class NCTaskManager {
 
     public void start() {
         log.info("Starting Task Manager application...");
-        System.out.println("TaskManager was started.");
-        log.info("Creating taskList (type = ARRAY)...");
         AbstractTaskList taskList = TaskListFactory.createTaskList(ListTypes.types.ARRAY);
         if (tasksFile.length()!=0) {
             TaskIO.readBinary(taskList, tasksFile);
